@@ -20,6 +20,18 @@
 <% if logged_in? %>
 <div style="width:500px;margin-right:auto;margin-left:auto;">
 	<div class="agree_link" style="float:left;">
+		<%= link_to "支持", new_article_reply_path(:article_id => @article, :attitude => 1) %>
+	</div>
+	<div class="disagree_link" style="float:right;">
+		<%= link_to "抵制", new_article_reply_path(:article_id => @article, :attitude => 2) %>
+	</div>
+	<div class="neutral_link" style="text-align:center;">
+		<%= link_to "中立", new_article_reply_path(:article_id => @article, :attitude => 0) %>
+	</div>
+</div>
+<% elsif %> <%# 如果为注册游客 %>
+	<div style="width:500px;margin-right:auto;margin-left:auto;">
+	<div class="agree_link" style="float:left;">
 		<%= link_to "支持", new_article_comment_path(:article_id => @article, :attitude => 1) %>
 	</div>
 	<div class="disagree_link" style="float:right;">
@@ -28,5 +40,8 @@
 	<div class="neutral_link" style="text-align:center;">
 		<%= link_to "中立", new_article_comment_path(:article_id => @article, :attitude => 0) %>
 	</div>
-</div>
+	</div>
+<% else %>
+	<%# 非注册游客 %>
 <% end %>
+
