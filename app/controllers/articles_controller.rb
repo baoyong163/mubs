@@ -1,12 +1,17 @@
 class ArticlesController < ApplicationController
   
-  before_filter :load_blog  
+  before_filter :load_blog, :login_required, :only => [ :new, :create, :edit, :update, :destroy , :auto_complete_for_tag_name]
+  
+  auto_complete_for :tag, :name
+
+  protect_from_forgery :except => :auto_complete_for_tag_name
 
   # GET /articles
   # GET /articles.xml
   def index
     if @blog
-      @articles = @blog.articles.find_new(15)
+      # @articles = @blog.articles.find_new(15)
+      @articles = @blog.articles.recent
     else
       @articles=Article.find_new(15)
     end
@@ -20,11 +25,12 @@ class ArticlesController < ApplicationController
   # GET /articles/1.xml
   def show
     @article = Article.find(params[:id])
-    #@blog = @article.blog if @blog.nil?
-    @comments = Comment.find(:all, :conditions => ['article_id = ?', @article.id] ).concat( Article.find(:all, :conditions => ['parent_id = ?', @article.id]))
-    @comments.sort! do |x, y|
-      x.created_at <=> y.created_at
-    end
+    @blog = params[:blog_id]
+    @comments = @article.comments.paginate(:per_page => 10, :page => params[:page])
+    # @comments = Comment.find(:all, :conditions => ['article_id = ?', @article.id] ).concat( Article.find(:all, :conditions => ['parent_id = ?', @article.id]))
+    # @comments.sort! do |x, y|
+    #   x.created_at <=> y.created_at
+    # end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @article }
@@ -52,6 +58,9 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new(params[:article])
     @article.blog << @blog
+    if params[:tag][:name] # 保存关键词
+      @article.tag_list=params[:tag][:name]
+    end
     respond_to do |format|
       if @article.save
         flash[:notice] = 'Article was successfully created.'

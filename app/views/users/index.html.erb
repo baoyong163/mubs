@@ -18,7 +18,7 @@
 		</div>
 		
 		<div class="span-7 last">
-			<% unless user.name.empty? %>
+			<% if user.name %>
 			<h3><%= :name.t %>: <%= user.name %></h3>
 			<% end %>
 			

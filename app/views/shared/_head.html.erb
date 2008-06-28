@@ -15,8 +15,12 @@
 <%= link_to :"translate".t, "/admin/translate" %>
 </div>
 
-<div id="user_bar" class="span-7 last">
+<div id="user_bar" class="span-6">
 	<%= render :partial  => 'users/user_bar' %>
+</div>
+
+<div class="span-1 last">
+	<%=image_tag 'loading.gif', :id=>'spinner', :style=>"display:none;"%>
 </div>
 
 <hr />

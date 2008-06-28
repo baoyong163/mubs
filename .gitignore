@@ -3,4 +3,6 @@ tmp/**/*
 .DS_Store
 doc/api
 doc/app
+doc/plugins
 .svn
+vendor/rails

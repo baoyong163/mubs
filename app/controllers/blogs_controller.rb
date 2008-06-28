@@ -1,4 +1,7 @@
 class BlogsController < ApplicationController
+  
+  before_filter :login_required, :only => [:new, :create, :update, :destroy]
+  
   # GET /blogs
   # GET /blogs.xml
   def index
@@ -50,7 +53,7 @@ class BlogsController < ApplicationController
   # POST /blogs.xml
   def create
     @blog = Blog.new(params[:blog])
-
+    @blog.users << current_user
     respond_to do |format|
       if @blog.save
         flash[:notice] = 'Blog was successfully created.'

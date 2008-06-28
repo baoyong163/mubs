@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080618174751) do
+ActiveRecord::Schema.define(:version => 20080623064921) do
 
   create_table "articles", :force => true do |t|
     t.integer  "thread_id",                 :limit => 11
@@ -216,6 +216,20 @@ ActiveRecord::Schema.define(:version => 20080618174751) do
     t.datetime "updated_at"
   end
 
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id",        :limit => 11
+    t.integer  "taggable_id",   :limit => 11
+    t.string   "taggable_type"
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type"], :name => "index_taggings_on_taggable_id_and_taggable_type"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "login"
     t.string   "email"
@@ -224,11 +238,9 @@ ActiveRecord::Schema.define(:version => 20080618174751) do
     t.string   "name",                      :limit => 40
     t.string   "crypted_password",          :limit => 40
     t.string   "salt",                      :limit => 40
-    t.string   "time_zone",                 :limit => 40, :default => "UTC"
     t.integer  "group_id",                  :limit => 11
     t.integer  "local",                     :limit => 11
     t.integer  "avatar_id",                 :limit => 11
-    t.integer  "blog_id",                   :limit => 11
     t.integer  "blog_id",                   :limit => 11
     t.datetime "remember_token_expires_at"
     t.datetime "last_login_at"
@@ -238,6 +250,7 @@ ActiveRecord::Schema.define(:version => 20080618174751) do
     t.datetime "deleted_at"
     t.string   "activation_code",           :limit => 40
     t.string   "state",                                   :default => "passive"
+    t.string   "time_zone",                 :limit => 40, :default => "UTC"
   end
 
 end

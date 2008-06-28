@@ -5,6 +5,15 @@
 </div>
 
 <div class="span-7 last">
+	
+	<% if @blog %>
+	<%= link_to 'New article', new_blog_article_path(@blog) %>
+	<% else %>
+	<%= link_to "New article", new_article_path %>
+	<% end %>
+
+<br />
+
 	<%= "Blog's users" %>:
 	<% @blog.users.each do |user| %>
 		<p><%= link_to user.login, [@blog, user] %></p>

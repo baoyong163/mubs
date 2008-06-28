@@ -1,11 +1,14 @@
+<% title :"Comment to Article".t + "" + @article.title %>
+
 <h1>New comment</h1>
 
-<%#= error_messages_for :comment %>
+<%= error_messages_for :comment %>
 
 <% form_for(@comment) do |f| %>
+	<%= render :partial => 'form' , :object => f%>
   <p>
     <%= f.submit :Create.t %>
   </p>
 <% end %>
 
-<%= link_to :Back.t, comments_path %>
+<%= link_to :Back.t, blog_articles_path(@blog) if @blog %>

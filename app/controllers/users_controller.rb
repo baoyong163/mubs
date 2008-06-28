@@ -4,6 +4,11 @@ class UsersController < ApplicationController
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge]
   before_filter :find_user, :only => [:suspend, :unsuspend, :destroy, :purge]
   
+  auto_complete_for :user, :login
+
+  protect_from_forgery :except => :auto_complete_for_user_login
+
+  
   def index
     @users=User.find(:all)
   end
