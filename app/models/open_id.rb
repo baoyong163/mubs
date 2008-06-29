@@ -1,8 +1,8 @@
 class OpenId < ActiveRecord::Base
-  validates_uniqueness_of   :url,    :case_sensitive => false
+  validates_presence_of     :url
+  validates_uniqueness_of   :url, :case_sensitive => false
 
   belongs_to :user #, :class_name => "User", :foreign_key => "user_id"
-
 
   protected
 
@@ -18,4 +18,5 @@ class OpenId < ActiveRecord::Base
       errors.add :url, '(OpenID) invalid! It should be a normal URI.'
     end
   end
+  
 end

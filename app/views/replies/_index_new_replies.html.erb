@@ -1,0 +1,14 @@
+<ul>
+	<% @articles.each do |article| %>
+	<% 
+	if article.title?
+		link_text = article.title
+	else
+		link_text = truncate(article.body, length = 30, truncate_string = "...")
+	end
+	%>
+	<li>
+		<%= link_to link_text, article_path(article) %>
+	</li>
+	<% end %>
+</ul>

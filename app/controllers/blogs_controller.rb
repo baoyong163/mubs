@@ -1,8 +1,11 @@
 class BlogsController < ApplicationController
+  
+  before_filter :login_required, :only => [:new, :create, :update, :destroy]
+  
   # GET /blogs
   # GET /blogs.xml
   def index
-    @blogs = Blog.find(:all)
+    @blogs = Blog.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -23,7 +26,7 @@ class BlogsController < ApplicationController
   # GET /blogs/1.xml
   def show
     @blog = Blog.find(params[:id])
-
+    @articles = @blog.articles.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @blog }
@@ -50,7 +53,7 @@ class BlogsController < ApplicationController
   # POST /blogs.xml
   def create
     @blog = Blog.new(params[:blog])
-
+    @blog.users << current_user
     respond_to do |format|
       if @blog.save
         flash[:notice] = 'Blog was successfully created.'

@@ -16,8 +16,20 @@ module Footnotes
         def included?
           Footnotes::Filter.notes.include?(self.to_sym)
         end
+
+        # Action to be called to start the Note.
+        # This is applied as a before_filter.
+        #
+        def start!
+        end
+
+        # Action to be called after the Note was used.
+        # This is applied as an after_filter.
+        #
+        def close!
+        end
       end
-      
+
       # Initialize notes.
       # Always receives a controller.
       #
@@ -76,11 +88,6 @@ module Footnotes
       def javascript
       end
 
-      # Action to be called after the Note was used.
-      #
-      def reset!
-      end
-
       # Specifies when should create a note for it.
       # By default, if title exists, it's valid.
       #
@@ -119,7 +126,7 @@ module Footnotes
         # Gets a bidimensional array and create a table.
         # The first array is used as label.
         #
-        def mount_table(array)
+        def mount_table(array, options = {})
           header = array.shift
           return '' if array.empty?
 
@@ -127,11 +134,15 @@ module Footnotes
           rows = array.collect{|i| "<tr><td>#{i.join('</td><td>')}</td></tr>" }
 
           <<-TABLE
-          <table>
+          <table #{hash_to_xml_attributes(options)}>
             <thead><tr><th>#{header.join('</th><th>')}</th></tr></thead>
             <tbody>#{rows.join}</tbody>
           </table>
           TABLE
+        end
+
+        def hash_to_xml_attributes(hash)
+          return hash.collect{ |key, value| "#{key.to_s}=\"#{value.gsub('"','\"')}\"" }.join(' ')
         end
     end
   end

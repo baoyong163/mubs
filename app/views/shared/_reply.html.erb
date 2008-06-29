@@ -1,0 +1,46 @@
+<div id="<%= dom_id reply %>" class="reply_list">
+	<div class="<% if reply.attitude==1 -%><%= 'agree' -%><% elsif reply.attitude==2-%><%= 'disagree' -%><% else -%><%= 'neutral' -%><% end -%>" style="text-align:center;">
+		<div class="reply_head">
+			<div class="author">
+				<div class="article_control" style="float:right;">					
+					<table>			
+							<!-- <tr><td><%#= link_to '返回', article_replies_path(article) %></td></tr> -->
+							<tr><td><%= link_to '编辑', edit_article_reply_path(reply.parent_id,reply) %></td></tr>
+							<tr><td><%= link_to :Destroy.t, article_path(reply), :confirm => :'Are you sure?'.t, :method => :delete %></td></tr>
+					</table>				
+				</div>
+				<cite><strong><%= reply.author %></strong></cite>
+			</div>
+			<div class="gravatar">
+				<%#= avatar_for reply.author %>
+			</div>
+			<div class="time">
+				<%#= "在" %><%#= distance_of_time_in_words article.created_at, reply.created_at %><%#= "之后说到:" %><%= reply.created_at.to_s(:db) %>
+			</div>
+			<div class="title">
+				<%=link_to reply.title, article_path(reply) %>
+			</div>
+		</div>
+		<br />
+		<div class="body" style="text-align:left;"><%= reply.body %></div>
+		<br />
+		<br />
+		<% if reply.attitude==2 %>
+			<% agree = "抵制"; disagree="支持" %>
+		<% else %>
+			<% agree = "支持"; disagree="抵制" %>
+		<% end %>
+		<div style="width:500px;margin-right:auto;margin-left:auto;">
+			<div class="agree_link" style="float:left;">
+				<%= link_to agree, new_article_reply_path(:article_id => reply.id, :attitude => 1) %>
+			</div>
+			<div class="disagree_link" style="float:right;">
+				<%= link_to disagree, new_article_reply_path(:article_id => reply.id, :attitude => 2) %>
+			</div>
+			<div class="neutral_link" style="text-align:center;">
+				<%= link_to "中立", new_article_reply_path(:article_id => reply.id, :attitude => 0) %>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="<%= "reply_article_"+reply.id.to_s -%>"></div>

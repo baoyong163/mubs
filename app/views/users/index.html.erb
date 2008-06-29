@@ -1,8 +1,13 @@
-<% title "Listing users" %>
-<h1>Listing users</h1>
+<% title :"Listing users".t  %>
+<h2><%= :"Listing users".t %></h2>
 
 
 <div class="span-15 prepend-1 colborder">
+	<div class="pagination" align="right">
+		<%= will_paginate @users %>
+	</div>
+	
+	<hr />
 	<% @users.each do |user| %>	
 		<div class="span-8">
 			<h3><%= link_to user.login, user %></h3>
@@ -18,7 +23,7 @@
 		</div>
 		
 		<div class="span-7 last">
-			<% unless user.name.empty? %>
+			<% if user.name %>
 			<h3><%= :name.t %>: <%= user.name %></h3>
 			<% end %>
 			
@@ -26,7 +31,7 @@
 			<div id="users_openids">
 				<%= user.login %>'s OpenIDs:
 				<% user.open_ids.each do |id| %>
-				<p><%= link_to id.url, [user, id] %></p> <%# open_id_path(id) %>
+				<p><%= link_to idn_url(id.url), [user, id] %></p> <%# open_id_path(id) %>
 				<% end %>
 			</div>
 			<% end %>	
@@ -39,6 +44,10 @@
 		</div>		
 		<hr />
 	<% end %>
+	
+	<div class="pagination" align="right">
+		<%= will_paginate @users %>
+	</div>	
 </div>
 
 <div class="span-7 last">

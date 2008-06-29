@@ -2,6 +2,95 @@
 	text-align:right;
 }
 
+input[name="openid_url"] {
+  background: url('/images/openid.png') no-repeat;
+	padding-left:15px;
+}
+p.open_id input {
+  background: url('/images/openid.png') no-repeat;
+	padding-left:15px;
+}
+
+/* @group Pagination 分页样式 */
+.pagenator{
+	text-align: right;
+}
+.pagination{
+padding: 2px;
+}
+
+.pagination ul{
+margin: 0;
+padding: 0;
+}
+
+.pagination li{
+display: inline;
+padding-bottom: 1px;
+}
+
+.pagination a, .pagination a:visited{
+padding: 0 5px;
+border: 1px;
+}
+
+.pagination a:hover, .pagination a:active{
+border: 1px;
+}
+
+.pagination li.currentpage{
+padding: 0 5px;
+border: 1px solid navy;
+}
+
+.pagination li.disablepage{
+padding: 0 5px;
+border: 1px;
+}
+
+.pagination li.nextpage{
+}
+
+* html .pagination li.currentpage, * html .pagination li.disablepage{ /*IE 6 and below. Adjust non linked LIs slightly to account for bugs*/
+margin-right: 5px;
+padding-right: 0;
+}
+/* @end */
+
+/* @group Pagination 分页样式 */
+
+.pagination {
+  padding: 3px;
+  margin: 3px;
+}
+.pagination a {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #aaaadd;
+  text-decoration: none;
+  color: #000099;
+}
+.pagination a:hover, .pagination a:active {
+  border: 1px solid #000099;
+  color: #000;
+}
+.pagination span.current {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #000099;
+  font-weight: bold;
+  background-color: #A7A37E;
+  color: #FFF;
+}
+.pagination span.disabled {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #eee;
+  color: #ddd;
+}
+
+/* @end */
+
 .fieldWithErrors {
   padding: 2px;
   background-color: red;

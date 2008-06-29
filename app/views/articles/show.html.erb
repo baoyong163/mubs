@@ -1,52 +1,74 @@
-<fieldset>
-	<legend>文章</legend>
-	<% if @blog %>
-	<p><%= link_to @article.title, [@blog, @article] %></p>
+<% if @blog %>
+	<h2><%= link_to @article.title, blog_article_path(@blog, @article) %></h2> 
 	<p> 
+	<%= link_to :Back.t, blog_path(@blog) %> |
 	<%= @article.created_at  %> | 
 	<%= link_to :Edit.t, edit_blog_article_path(@blog, @article) %> | 
-	<%= link_to :Destroy.t, [@blog, @article], :confirm => :'Are you sure?'.t, :method => :delete %></p>
+	<%= link_to :Destroy.t, blog_article_path(@blog, @article), :confirm => :'Are you sure?'.t, :method => :delete %></p> <%# [@blog, @article_comment] %>
 	<% else %>
-	<p><%= link_to @article.title,  @article %></p>
+	<h2><%= link_to @article.title,  @article %></h2>
 	<p> 
 	<%= @article.created_at  %> | 
 	<%= link_to :Edit.t, edit_article_path(@article) %> | 
 	<%= link_to :Destroy.t, @article, :confirm => :'Are you sure?'.t, :method => :delete %>
 	</p>
-	<% end %>
+<% end %>
 	
-	<p><%= h @article.body %></p>
-</fieldset>
-<% if @comments.size > 0 %>
-<fieldset>
-	<legend>回复</legend>
-	<% @comments.each_with_index do |comment, index| %>
-	<p><%= index %></p>
-	<p><%= comment.title %></p>
-	<p><%= comment.body %></p>
+<div class="abstract">
+	<table width="600" align="center">
+		<td>
+			<% if @article.digest == nil || @article.digest.empty? %>
+			<% elsif logged_in? %>
+			摘要:<%= in_place_editor_field :article, 'digest',{}, :rows => 6, :cols => 80, :cancel_text => "取消" %>
+			<% else %>
+			摘要:<%= white_list @article.digest %>
+			<% end %>
+		</td>
+	</table>
+</div>	
+
+<%- if @article.tags.any? -%>
+<p>关键词: <%- @article.tags.each do |k|-%><%= h(k.name)+", " -%><%- end -%></p>
+<%- end -%>
+
+<div class="body">
+	<% if logged_in? %>
+	<%= in_place_editor_field :article, 'body',{}, :rows => 30, :cols => 90 %>
+	<% else %>
+	<%= white_list @article.body %>
 	<% end %>
-</fieldset>
+</div>
+
+<%= render :file => "comments/show", :collection => @comments, :use_full_path => true %>
+
+<% if logged_in? %>
+<div style="width:500px;margin-right:auto;margin-left:auto;">
+	<div class="agree_link" style="float:left;">
+		<%= link_to "支持", new_article_reply_path(:article_id => @article, :attitude => 1) %>
+	</div>
+	<div class="disagree_link" style="float:right;">
+		<%= link_to "抵制", new_article_reply_path(:article_id => @article, :attitude => 2) %>
+	</div>
+	<div class="neutral_link" style="text-align:center;">
+		<%= link_to "中立", new_article_reply_path(:article_id => @article, :attitude => 0) %>
+	</div>
+</div>
+<% elsif !logged_in? %> <%# 如果为注册游客 %>
+	<div style="width:500px;margin-right:auto;margin-left:auto;">
+	<div class="agree_link" style="float:left;">
+		<%= link_to "支持", new_article_comment_path(:article_id => @article, :attitude => 1) %>
+	</div>
+	<div class="disagree_link" style="float:right;">
+		<%= link_to "抵制", new_article_comment_path(:article_id => @article, :attitude => 2) %>
+	</div>
+	<div class="neutral_link" style="text-align:center;">
+		<%= link_to "中立", new_article_comment_path(:article_id => @article, :attitude => 0) %>
+	</div>
+	</div>
+<% else %>
+	<%# 非注册游客 %>
 <% end %>
 
-<% if @blog %>
-<fieldset>
-	<legend>添加回复</legend>
-	<% if session[:user] == 'users' %>
-	<% @article_comment = Article.new %>
-	<% form_for([@blog, @article_comment]) do |f| %>
-	<p><%= f.hidden_field('author', 'value' => 'user_name') %></p>
-  <p><label for="title"><%= :Title.t %></label><br/>
-  <%= f.text_field('title') %></p>
-  <p><label for="body"><%= :Body.t %></label><br/>
-  <%= f.text_area('body') %></p>
-	<p><%= f.submit 'ok' %><%= f.hidden_field('parent_id', 'value' => @article.id ) %></p>
-	<% end %>
-	<% elsif session[:user] == 'commenter' %>
-	<% if session[:traveler] == ture %>
-	<% else %>
-	<% end %>
-	<% end %>
-</fieldset>
-<%= link_to :Edit.t, edit_blog_article_path(@blog, @article) %> |
-<%= link_to :Back.t, blog_articles_path(@blog) %>
-<% end %>
+<%= render :partial => "shared/reply", :collection => @comments %>
+<%#= will_paginate @comments %>
+

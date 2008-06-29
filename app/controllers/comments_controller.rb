@@ -24,8 +24,8 @@ class CommentsController < ApplicationController
   # GET /comments/new
   # GET /comments/new.xml
   def new
-    @comment = Comment.new
-
+    @comment = Comment.new(:attitude => params[:attitude])
+    @article = Article.find(params[:article_id])
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @comment }

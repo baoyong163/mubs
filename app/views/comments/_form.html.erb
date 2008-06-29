@@ -1,0 +1,48 @@
+
+
+<p><b>标题</b><br /> <%= form.text_field :title %></p>
+<p><b>作者</b><br /> <%= form.text_field :author %></p>
+<!-- <p><b>关键词</b><br /> <%#= form.text_field :keywords %></p> -->	
+
+<fieldset>
+	<legend><%= :Tag.t %></legend>
+	用半角英文逗号隔开标签:
+	<%= text_field_with_auto_complete :tag, :name, {}, {:min_chars => 2,:indicator => "spinner", :tokens => ','} 
+	%>
+</fieldset>
+
+
+<fieldset id="article_body_field">
+	<legend>正文</legend>
+	<%= form.text_area :body, "cols" => 90, "rows" => 20 %>
+</fieldset>
+
+<fieldset>
+	<legend>选项</legend>
+
+	<p>
+		<b>是否为草稿?</b>(默认否.草稿默认不接受回复.)<br />
+		<label for="article_is_draft_true">是</label>
+		<%= form.radio_button :is_draft, 'true' %>
+		<label for="article_is_draft_false">否</label>
+		<%= form.radio_button :is_draft, 'false' %>
+	</p>
+
+	<p>
+		<b>是否解析显示表情符号?</b>(默认是.当内容含表情符号影响表达时,请选否.)<br />
+		<label for="article_allow_smile_true">是</label>
+		<%= form.radio_button :allow_smile, 'true' %>
+		<label for="article_allow_smile_false">否</label>
+		<%= form.radio_button :allow_smile, 'false' %>
+	</p>
+
+	<p>
+		<b>是否显示签名?</b>(默认是.)<br />
+		<label for="article_show_signature_true">是</label>
+		<%= form.radio_button :show_signature, 'true' %>
+		<label for="article_show_signature_false">否</label>
+		<%= form.radio_button :show_signature, 'false' %>
+	</p>
+</fieldset>
+
+<!--[eoform:article]-->

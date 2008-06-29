@@ -4,24 +4,55 @@ class UsersController < ApplicationController
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge]
   before_filter :find_user, :only => [:suspend, :unsuspend, :destroy, :purge]
   
+  auto_complete_for :user, :login
+
+  protect_from_forgery :except => :auto_complete_for_user_login
+
+  
   def index
-    @users=User.find(:all)
+    @users=User.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
   end
   
   def show
-    @user=User.find(params[:id])
+    @user=User.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
   end
 
   # render new.rhtml
   def new
     @user = User.new
   end
- 
+
+=begin
+Use attribute_fu plugin to create sub-model
+@user.open_id_attributes = params[:open_id_attributes]
+
+  Parameters: {
+    "user"=>{
+      "name"=>"jayesoui", 
+      "password_confirmation"=>"",
+      "open_id_attributes"=>{
+        "new"=>{
+          "0"=>{"url"=>"http://测试.myopenid.com/ "},
+          "1"=>{"url"=>"http://test.myopenid.com/"}, 
+          "2"=>{"url"=>""}
+        }
+      }, 
+      "login"=>"jayesoui", 
+      "password"=>"", 
+      "email"=>"test@test.com"
+    },
+    "commit"=>"Update", 
+    "authenticity_token"=>"cf33167a49d72312a9789c3e8ecd5c2493b6ce0f", 
+    "_method"=>"put", 
+    "action"=>"update", 
+    "id"=>"3", 
+    "controller"=>"users"
+  }
+=end
   def create
     logout_keeping_session!
     @user = User.new(params[:user])
-    @open_id = OpenId.new(params[:open_id])
-    @user.open_ids << @open_id if @open_id.save!
+    @user.open_id_attributes = params[:open_id_attributes] # use attribute_fu plugin to create sub-model
     @user.register! if @user && @user.valid?
     success = @user && @user.valid?
     if success && @user.errors.empty?
@@ -37,11 +68,38 @@ class UsersController < ApplicationController
     @user=User.find(params[:id])
     @open_ids = @user.open_ids
   end
+  
+  
+=begin
+Use attribute_fu plugin to update sub-model
+@user.open_id_attributes = params[:open_id_attributes]
 
+  Parameters: {
+    "user"=>{
+      "name"=>"jayesoui", 
+      "password_confirmation"=>"",
+      "open_id_attributes"=>{
+        "new"=>{
+          "0"=>{"url"=>"http://测试.myopenid.com/ "},
+          "1"=>{"url"=>"http://test.com/"}, 
+          "2"=>{"url"=>""}
+        }
+      }, 
+      "login"=>"jayesoui", 
+      "password"=>"", 
+      "email"=>"test@test.com"
+    },
+    "commit"=>"Update", 
+    "authenticity_token"=>"cf33167a49d72312a9789c3e8ecd5c2493b6ce0f", 
+    "_method"=>"put", 
+    "action"=>"update", 
+    "id"=>"3", 
+    "controller"=>"users"
+  }
+=end
   def update
     @user = User.find(params[:id])
-    @open_id = OpenId.new(params[:open_id])
-    @user.open_ids << @open_id if @open_id.save!
+    @user.open_id_attributes = params[:open_id_attributes] # use attribute_fu plugin to update sub-model
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'

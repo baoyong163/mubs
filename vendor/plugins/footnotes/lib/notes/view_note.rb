@@ -30,11 +30,11 @@ module Footnotes
 
       protected
         def template_extension(path)
-          @template.finder.pick_template_extension(path)
+          @template.send(:pick_template_extension, ActionView::TemplateFile.from_path(path)).to_s
         end
 
         def template_base_path(path)
-          @template.finder.pick_template(path, template_extension(path))
+          File.join ApplicationController.view_paths.first.to_s, template_extension(path)
         end
 
         def template_path
