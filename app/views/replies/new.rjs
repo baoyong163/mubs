@@ -1,0 +1,2 @@
+page.replace_html "reply_article_#{params[:article_id]}", :file => "replies/new"
+page.replace_html "cancel_reply", link_to_function("取消"){|page| page.replace_html "reply_article_#{params[:article_id]}", ""}

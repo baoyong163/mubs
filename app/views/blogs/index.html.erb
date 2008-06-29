@@ -1,7 +1,12 @@
 <% title "mubs index" %>
-
+<h2><%= :'blog list'.t %></h2>
+	
 <div class="span-15 prepend-1 colborder">
-	<h6><%= :'blog list'.t %></h6>
+	<div class="pagination" align="right">
+		<%= will_paginate @blogs %>
+	</div>
+
+	<hr />
 	<% @blogs.each do |blog| %>	
 		<div class="span-9"><%= link_to blog.name, blog %></div>
 		<div class="span-2"><%= link_to :Show.t, blog %></div>
@@ -9,7 +14,12 @@
 		<div class="span-2 last">
 			<%= link_to :Destroy.t, blog, :confirm => :'Are you sure?'.t, :method => :delete %>
 		</div>
+		<hr />
 	<% end %>
+	
+	<div class="pagination" align="right">
+		<%= will_paginate @blogs %>
+	</div>
 </div>
 
 <div class="span-7 last">

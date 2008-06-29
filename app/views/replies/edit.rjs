@@ -1,0 +1,2 @@
+page.replace_html dom_id(@article), :file => "replies/edit"
+page.insert_html :bottom, dom_id(@article), " | "+link_to_function("取消"){|page| page.replace_html dom_id(@article),""}

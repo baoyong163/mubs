@@ -1,8 +1,21 @@
-<% title @blog.name + :"articles".t  if @blog %>
-<h1><%= @blog.name + :"'s ".t + :"articles".t if @blog %></h1>
-
+<% 
+if @blog 
+	title @blog.name + :"articles".t 
+%>
+<h1><%= @blog.name + :"'s ".t + :"articles".t %></h1>
+<% 
+else
+title :"Listing articles".t
+%>
+<h2><%= :"Listing articles".t %></h2>
+<% end %>
 
 <div class="span-15 prepend-1 colborder">
+	<div class="pagination" align="right">
+		<%= will_paginate @articles %>
+	</div>	
+	
+	<hr />
 	<% @articles.each do |article| %>
 	<div>	
 		<h2>
@@ -26,6 +39,10 @@
 		<hr />
 	</div>
 	<% end %>
+
+	<div class="pagination" align="right">
+		<%= will_paginate @articles %>
+	</div>	
 </div>
 
 <div class="span-7 last">

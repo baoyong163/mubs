@@ -1,8 +1,13 @@
-<% title "Listing users" %>
-<h1>Listing users</h1>
+<% title :"Listing users".t  %>
+<h2><%= :"Listing users".t %></h2>
 
 
 <div class="span-15 prepend-1 colborder">
+	<div class="pagination" align="right">
+		<%= will_paginate @users %>
+	</div>
+	
+	<hr />
 	<% @users.each do |user| %>	
 		<div class="span-8">
 			<h3><%= link_to user.login, user %></h3>
@@ -39,6 +44,10 @@
 		</div>		
 		<hr />
 	<% end %>
+	
+	<div class="pagination" align="right">
+		<%= will_paginate @users %>
+	</div>	
 </div>
 
 <div class="span-7 last">

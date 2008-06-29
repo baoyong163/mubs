@@ -1,0 +1,40 @@
+<% title :reply.t + " " + @article.title %>
+<h2><%= :reply.t + " " + @article.title %></h2>
+<% 
+if @reply.attitude==1 
+	attitude = 'new_agree'
+elsif @reply.attitude==2
+	attitude = 'new_disagree'
+else
+	attitude = 'new_neutral' 
+end
+%>
+
+<div class="<%= attitude %>">
+	<div id="new_reply">
+		<%= error_messages_for :reply %>
+		<% remote_form_for(:reply, :url => article_replies_path) do |f| %>
+		<!--[form:reply]-->
+		<b>新回复标题:</b><%= f.text_field :title, :cols => 70 %>
+		
+		<fieldset>
+			<legend><%= :Tag.t %></legend>
+			用半角英文逗号隔开标签:
+			<%= text_field_with_auto_complete :tag, :name, {}, {:min_chars => 2,:indicator => "spinner", :tokens => ','} 
+			%>
+		</fieldset>
+		
+		<!-- <p><b>摘要</b><br /> <%#= f.text_area :digest, "cols" => 90, "rows" => 5 %></p>  -->
+
+		<b>正文:</b><br />
+		<%= f.text_area :body, "cols" => 90, "rows" => 10 %>
+		<!-- <p><b>发布?</b><br /><%#= f.text_field :published %></p> -->
+		<%= f.hidden_field :attitude %>
+		<!--[eoform:reply]-->
+		<div id="cancel_reply" class = "link_buttons" style = "float:right;"></div>
+		<%#= link_to 'Back', article_replies_path(:article_id) %>
+		<%= link_to :Back.t, articles_path(:view => "list"), :class => "link_buttons", :style => "float:right;" %>
+		<%= submit_tag :Reply.t, :class => "submit_buttons" %>
+		<% end %>
+	</div>
+</div>

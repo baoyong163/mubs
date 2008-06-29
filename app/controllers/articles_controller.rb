@@ -2,6 +2,9 @@ class ArticlesController < ApplicationController
   
   before_filter :load_blog, :login_required, :only => [ :new, :create, :edit, :update, :destroy , :auto_complete_for_tag_name]
   
+  in_place_edit_for :article, :title
+  in_place_edit_for :article, :digest
+  in_place_edit_for :article, :body
   auto_complete_for :tag, :name
 
   protect_from_forgery :except => :auto_complete_for_tag_name
@@ -11,9 +14,11 @@ class ArticlesController < ApplicationController
   def index
     if @blog
       # @articles = @blog.articles.find_new(15)
-      @articles = @blog.articles.recent
+      # @articles = @blog.articles.recent
+      @articles = @blog.articles.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
     else
-      @articles=Article.find_new(15)
+      # @articles=Article.find_new(15)
+      @articles=Article.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
     end
     respond_to do |format|
       format.html # index.html.erb
@@ -27,10 +32,13 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
     @blog = params[:blog_id]
     @comments = @article.comments.paginate(:per_page => 10, :page => params[:page])
+    @replies = @article.replies.paginate(:per_page => 10, :page => params[:page])
+    @article.view!
     # @comments = Comment.find(:all, :conditions => ['article_id = ?', @article.id] ).concat( Article.find(:all, :conditions => ['parent_id = ?', @article.id]))
-    # @comments.sort! do |x, y|
-    #   x.created_at <=> y.created_at
-    # end
+    @comments = @replies + Comment.find(:all)#paginate(:per_page => 10, :page => params[:page])
+    @comments.sort! do |x, y|
+      x.created_at <=> y.created_at
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @article }
@@ -77,7 +85,10 @@ class ArticlesController < ApplicationController
   # PUT /articles/1.xml
   def update
     @article = Article.find(params[:id])
-
+    @article.blog + [@blog] if @blog # @blog不为数组时，以后考虑多个blog的情况
+    if params[:tag][:name] # 保存关键词
+      @article.tag_list=params[:tag][:name]
+    end
     respond_to do |format|
       if @article.update_attributes(params[:article])
         flash[:notice] = 'Article was successfully updated.'

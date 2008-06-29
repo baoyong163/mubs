@@ -21,7 +21,7 @@ ActionController::Routing::Routes.draw do |map|
                                      :purge     => :delete }
 
   map.resources :comments
-  map.resources :articles, :has_many => :comments
+  map.resources :articles, :has_many => [:replies, :comments]
   map.resources :blogs, :collection => { :home => :get }, :has_many => [:articles, :users]
   
   map.open_id_complete 'session', :controller => "sessions", :action => "create", :requirements => { :method => :get }

@@ -1,6 +1,7 @@
 <% if @blog %>
 	<h2><%= link_to @article.title, blog_article_path(@blog, @article) %></h2> 
 	<p> 
+	<%= link_to :Back.t, blog_path(@blog) %> |
 	<%= @article.created_at  %> | 
 	<%= link_to :Edit.t, edit_blog_article_path(@blog, @article) %> | 
 	<%= link_to :Destroy.t, blog_article_path(@blog, @article), :confirm => :'Are you sure?'.t, :method => :delete %></p> <%# [@blog, @article_comment] %>
@@ -13,7 +14,30 @@
 	</p>
 <% end %>
 	
-<p><%= h @article.body %></p>
+<div class="abstract">
+	<table width="600" align="center">
+		<td>
+			<% if @article.digest == nil || @article.digest.empty? %>
+			<% elsif logged_in? %>
+			摘要:<%= in_place_editor_field :article, 'digest',{}, :rows => 6, :cols => 80, :cancel_text => "取消" %>
+			<% else %>
+			摘要:<%= white_list @article.digest %>
+			<% end %>
+		</td>
+	</table>
+</div>	
+
+<%- if @article.tags.any? -%>
+<p>关键词: <%- @article.tags.each do |k|-%><%= h(k.name)+", " -%><%- end -%></p>
+<%- end -%>
+
+<div class="body">
+	<% if logged_in? %>
+	<%= in_place_editor_field :article, 'body',{}, :rows => 30, :cols => 90 %>
+	<% else %>
+	<%= white_list @article.body %>
+	<% end %>
+</div>
 
 <%= render :file => "comments/show", :collection => @comments, :use_full_path => true %>
 
@@ -29,7 +53,7 @@
 		<%= link_to "中立", new_article_reply_path(:article_id => @article, :attitude => 0) %>
 	</div>
 </div>
-<% elsif %> <%# 如果为注册游客 %>
+<% elsif !logged_in? %> <%# 如果为注册游客 %>
 	<div style="width:500px;margin-right:auto;margin-left:auto;">
 	<div class="agree_link" style="float:left;">
 		<%= link_to "支持", new_article_comment_path(:article_id => @article, :attitude => 1) %>
@@ -44,4 +68,7 @@
 <% else %>
 	<%# 非注册游客 %>
 <% end %>
+
+<%= render :partial => "shared/reply", :collection => @comments %>
+<%#= will_paginate @comments %>
 
