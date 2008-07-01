@@ -3,5 +3,3 @@
 # <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
 
 ActionView::Helpers::AssetTagHelper.register_stylesheet_expansion :bps => ['blueprint/screen.css'] # blueprint css framework
-
-ActionView::Helpers::AssetTagHelper.register_stylesheet_expansion :bpp => ['blueprint/print.css'] # blueprint css framework

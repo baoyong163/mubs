@@ -1,13 +1,21 @@
+/*tag cloud style*/
+.cloud1 { font-size: 1.0em; }
+.cloud2 { font-size: 1.2em; }
+.cloud3 { font-size: 1.4em; }
+.cloud4 { font-size: 1.6em; }
+
 .control{
 	text-align:right;
 }
 
 input[name="openid_url"] {
   background: url('/images/openid.png') no-repeat;
+	background-position: 0 50%;
 	padding-left:15px;
 }
 p.open_id input {
   background: url('/images/openid.png') no-repeat;
+	background-position: 0 50%;
 	padding-left:15px;
 }
 

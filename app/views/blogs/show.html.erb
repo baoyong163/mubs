@@ -28,6 +28,14 @@
 	<% end %>
 	<%= link_to :Edit.t, edit_blog_path(@blog) %> |
 	<%= link_to :Back.t, blogs_path %>
+
+<br />
+	
+	<div id="tag_cloud">
+	<% tag_cloud @tags, %w(cloud1 cloud2 cloud3 cloud4) do |tag, css_class| %>
+		<%= link_to tag.name, { :controller => :articles, :action => :tag, :id => tag.name }, :class => css_class %>
+	<% end %>
+	</div>
 </div>
 
 <hr />

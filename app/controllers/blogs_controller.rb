@@ -2,6 +2,19 @@ class BlogsController < ApplicationController
   
   before_filter :login_required, :only => [:new, :create, :update, :destroy]
   
+  # mubs的总首页
+  def home
+    @blogs = Blog.find(:all)
+    respond_to do |format|
+      format.html # home.html.erb
+      format.xml  { render :xml => @blogs }
+    end
+  end
+
+  def unkown_request
+    redirect_to "/404.html"
+  end
+  
   # GET /blogs
   # GET /blogs.xml
   def index
@@ -13,20 +26,12 @@ class BlogsController < ApplicationController
     end
   end
   
-  # mubs的总首页
-  def home
-    @blogs = Blog.find(:all)
-    respond_to do |format|
-      format.html # home.html.erb
-      format.xml  { render :xml => @blogs }
-    end
-  end
-
   # GET /blogs/1
   # GET /blogs/1.xml
   def show
     @blog = Blog.find(params[:id])
     @articles = @blog.articles.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
+    @tags = @blog.articles.tag_counts
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @blog }

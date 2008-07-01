@@ -1,11 +1,11 @@
 <h1><%= link_to :"WELCOME TO".t + " CCF MUBS", '/'%></h1>
-<div class="span-8 prepend-1 colborder">
+<div class="span-8 prepend-1 colborder np">
 <%= link_to :'Home'.t, '/' %> |
 <%= link_to :'Blogs List'.t, '/blogs' %> |
 <%= link_to :'Articles List'.t, '/articles' %> |
 <%= link_to :'Users List'.t, '/users' %>	
 </div>
-<div id='lang_selector' class="span-7">
+<div id='lang_selector' class="span-7  np">
 <%= :"Choose your language".t %>:
 <%= link_to "en", {:controller => controller.controller_name, :action => controller.action_name, :locale => 'en', :id => params[:id]} %> |
 <%= link_to "zh", {:controller => controller.controller_name, :action => controller.action_name, :locale => 'zh', :id => params[:id]} %> |
@@ -15,7 +15,7 @@
 <%= link_to :"translate".t, "/admin/translate" %>
 </div>
 
-<div id="user_bar" class="span-6">
+<div id="user_bar" class="span-6  np">
 	<%= render :partial  => 'users/user_bar' %>
 </div>
 

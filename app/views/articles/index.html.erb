@@ -18,13 +18,13 @@ title :"Listing articles".t
 	<hr />
 	<% @articles.each do |article| %>
 	<div>	
-		<h2>
+		<h3>
 			<% if @blog %>
 				<%= link_to article.title, [@blog, article] %>
 			<% else %>
 				<%= link_to article.title, article %>
 			<% end %>
-		</h2> 
+		</h3> 
 		<p class="control">
 		<%= article.created_at  %> | 
 		<% if @blog %>
@@ -45,15 +45,26 @@ title :"Listing articles".t
 	</div>	
 </div>
 
-<div class="span-7 last">
-
-<%= link_to 'New article', new_blog_article_path(@blog) if @blog %>
-
-<%= link_to "New article", new_article_path %>
+<div class="span-7 last control">
+<%
+if @blog
+	concat link_to('New article', new_blog_article_path(@blog))
+else
+	concat link_to("New article", new_article_path)
+end
+%>
 
 <br />
-<%= link_to 'blogs', blogs_path %>
 
+<%= link_to 'blogs', blogs_path  %>
+
+<br />
+
+	<div id="tag_cloud">
+	<% tag_cloud @tags, %w(cloud1 cloud2 cloud3 cloud4) do |tag, css_class| %>
+		<%= link_to tag.name, { :controller => :articles, :action => :tag, :id => tag.name }, :class => css_class %>
+	<% end %>
+	</div>
 </div>
 
 <hr />

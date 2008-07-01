@@ -8,6 +8,7 @@
 	<% else %>
 	<h2><%= link_to @article.title,  @article %></h2>
 	<p> 
+	<%= link_to :Back.t, articles_path %> |
 	<%= @article.created_at  %> | 
 	<%= link_to :Edit.t, edit_article_path(@article) %> | 
 	<%= link_to :Destroy.t, @article, :confirm => :'Are you sure?'.t, :method => :delete %>
@@ -39,8 +40,6 @@
 	<% end %>
 </div>
 
-<%= render :file => "comments/show", :collection => @comments, :use_full_path => true %>
-
 <% if logged_in? %>
 <div style="width:500px;margin-right:auto;margin-left:auto;">
 	<div class="agree_link" style="float:left;">
@@ -71,4 +70,4 @@
 
 <%= render :partial => "shared/reply", :collection => @comments %>
 <%#= will_paginate @comments %>
-
+<%#= render :file => "comments/show", :collection => @comments, :use_full_path => true %>

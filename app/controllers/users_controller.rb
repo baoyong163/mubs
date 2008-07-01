@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user=User.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
+    @user=User.find(params[:id])
   end
 
   # render new.rhtml

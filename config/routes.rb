@@ -1,41 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :memberships
-  
-  map.resources :open_ids
-
-  map.root :controller => "blogs", :action => "home"
-
-  map.resources :sites, :member => {:set_states => :post}
-
-  map.resources :categories
-
-  # Globalize插件所需路由
-  map.connect ':locale/:controller/:action/:id'
-  
-  map.namespace :admin do |admin|
-    admin.resources :translate
-  end
-  
-	map.resources :commenters, :member => { :suspend   => :put,
-                                     :unsuspend => :put,
-                                     :purge     => :delete }
-
-  map.resources :comments
-  map.resources :articles, :has_many => [:replies, :comments]
-  map.resources :blogs, :collection => { :home => :get }, :has_many => [:articles, :users]
-  
-  map.open_id_complete 'session', :controller => "sessions", :action => "create", :requirements => { :method => :get }
-  
-  map.resource :session
-  
-  # restful-authentication 所需路由
-  map.signup '/signup', :controller => 'users', :action => 'new'
-  map.login  '/login',  :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
-  
-  map.resources :users, :member => { :suspend => :put, :unsuspend => :put, :purge => :delete },
-                :has_many => [:blogs, :articles, :open_ids]
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
@@ -65,8 +28,51 @@ ActionController::Routing::Routes.draw do |map|
   # map.root :controller => "welcome"
 
   # See how all your routes lay out with "rake routes"
+    
+  map.resources :tags
+  
+  map.resources :memberships
+  
+  map.resources :open_ids
+
+  map.root :controller => "blogs", :action => "home"
+
+  map.resources :sites, :member => {:set_states => :post}
+
+  map.resources :categories
+
+  # Globalize插件所需路由
+  map.connect ':locale/:controller/:action/:id'
+  
+  map.namespace :admin do |admin|
+    admin.resources :translate
+  end
+  
+	map.resources :commenters, :member => { :suspend   => :put,
+                                     :unsuspend => :put,
+                                     :purge     => :delete }
+
+  map.resources :comments
+  map.resources :articles, :has_many => [:replies, :comments, :tags]
+  map.resources :blogs, :collection => { :home => :get }, :has_many => [:articles, :users]
+  
+  map.open_id_complete 'session', :controller => "sessions", :action => "create", :requirements => { :method => :get }
+  
+  map.resource :session
+  
+  # restful-authentication 所需路由
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.login  '/login',  :controller => 'sessions', :action => 'new'
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+  map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
+  
+  map.resources :users, :member => { :suspend => :put, :unsuspend => :put, :purge => :delete },
+                :has_many => [:blogs, :articles, :open_ids, :tags]
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+  
+  # 未知路径让blogs/unkown_request处理,返回404或者其它
+  map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env.production?
 end

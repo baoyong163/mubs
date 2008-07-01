@@ -9,21 +9,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080623064921) do
+ActiveRecord::Schema.define(:version => 20080630195814) do
 
   create_table "articles", :force => true do |t|
-    t.integer  "thread_id",                 :limit => 11
-    t.integer  "parent_id",                 :limit => 11
-    t.integer  "permission",                :limit => 11
-    t.integer  "rank",                      :limit => 11
-    t.integer  "adver",                     :limit => 11
-    t.integer  "copyright",                 :limit => 11
-    t.integer  "recommend",                 :limit => 11
-    t.integer  "lft",                       :limit => 11
-    t.integer  "rgt",                       :limit => 11
-    t.integer  "attitude",                  :limit => 11, :default => 0
-    t.integer  "reply_count",               :limit => 11, :default => 0
-    t.integer  "view_count",                :limit => 11, :default => 1
+    t.integer  "thread_id"
+    t.integer  "parent_id"
+    t.integer  "permission"
+    t.integer  "rank"
+    t.integer  "adver"
+    t.integer  "copyright"
+    t.integer  "recommend"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.integer  "attitude",                                 :default => 0
+    t.integer  "reply_count",                              :default => 0
+    t.integer  "view_count",                               :default => 1
     t.string   "title",                     :limit => 40
     t.string   "author",                    :limit => 40
     t.string   "ip_address",                :limit => 40
@@ -38,24 +38,25 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
     t.string   "article_password"
     t.string   "cached_category_id_list"
     t.string   "cached_category_name_list"
-    t.boolean  "allow_reply",                             :default => true
-    t.boolean  "published",                               :default => true
-    t.boolean  "allow_smile",                             :default => true
-    t.boolean  "show_signature",                          :default => true
-    t.boolean  "allow_ping",                              :default => false
-    t.boolean  "is_reply",                                :default => false
-    t.boolean  "is_draft",                                :default => false
-    t.boolean  "infraction",                              :default => false
+    t.boolean  "allow_reply",                              :default => true
+    t.boolean  "published",                                :default => true
+    t.boolean  "allow_smile",                              :default => true
+    t.boolean  "show_signature",                           :default => true
+    t.boolean  "allow_ping",                               :default => false
+    t.boolean  "is_reply",                                 :default => false
+    t.boolean  "is_draft",                                 :default => false
+    t.boolean  "infraction",                               :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "published_at"
+    t.string   "cached_tag_list",           :limit => 512
   end
 
   add_index "articles", ["permalink"], :name => "index_articles_on_permalink"
 
   create_table "articles_blogs", :id => false, :force => true do |t|
-    t.integer "article_id", :limit => 11
-    t.integer "blog_id",    :limit => 11
+    t.integer "article_id"
+    t.integer "blog_id"
   end
 
   add_index "articles_blogs", ["article_id", "blog_id"], :name => "index_articles_blogs_on_article_id_and_blog_id"
@@ -64,10 +65,10 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
   create_table "blogs", :force => true do |t|
     t.string   "name",        :limit => 40
     t.string   "subtitle",    :limit => 40
-    t.integer  "status",      :limit => 11
-    t.integer  "rank",        :limit => 11
-    t.integer  "permission",  :limit => 11
-    t.integer  "adver",       :limit => 11
+    t.integer  "status"
+    t.integer  "rank"
+    t.integer  "permission"
+    t.integer  "adver"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -77,10 +78,10 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
     t.string   "name"
     t.string   "image"
     t.string   "description"
-    t.integer  "parent_id",   :limit => 11
-    t.integer  "tree_id",     :limit => 11
-    t.integer  "lft",         :limit => 11
-    t.integer  "rgt",         :limit => 11
+    t.integer  "parent_id"
+    t.integer  "tree_id"
+    t.integer  "lft"
+    t.integer  "rgt"
     t.string   "color",       :limit => 16
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -105,9 +106,9 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
   end
 
   create_table "comments", :force => true do |t|
-    t.integer  "article_id",     :limit => 11
-    t.integer  "permission",     :limit => 11
-    t.integer  "commenter_id",   :limit => 11
+    t.integer  "article_id"
+    t.integer  "permission"
+    t.integer  "commenter_id"
     t.string   "title"
     t.string   "author"
     t.string   "ip_address"
@@ -115,9 +116,9 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
     t.string   "website"
     t.text     "body"
     t.text     "body_html"
-    t.boolean  "allow_smile",                  :default => true
-    t.boolean  "show_signature",               :default => true
-    t.boolean  "is_draft",                     :default => false
+    t.boolean  "allow_smile",    :default => true
+    t.boolean  "show_signature", :default => true
+    t.boolean  "is_draft",       :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -162,11 +163,11 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
     t.string  "type"
     t.string  "tr_key"
     t.string  "table_name"
-    t.integer "item_id",             :limit => 11
+    t.integer "item_id"
     t.string  "facet"
     t.boolean "built_in"
-    t.integer "language_id",         :limit => 11
-    t.integer "pluralization_index", :limit => 11
+    t.integer "language_id"
+    t.integer "pluralization_index"
     t.text    "text"
     t.string  "namespace"
   end
@@ -175,8 +176,8 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
   add_index "globalize_translations", ["table_name", "item_id", "language_id"], :name => "globalize_translations_table_name_and_item_and_language"
 
   create_table "memberships", :force => true do |t|
-    t.integer  "user_id",    :limit => 11
-    t.integer  "blog_id",    :limit => 11
+    t.integer  "user_id"
+    t.integer  "blog_id"
     t.string   "role"
     t.string   "permission"
     t.string   "note"
@@ -188,8 +189,8 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
 
   create_table "open_id_authentication_associations", :force => true do |t|
-    t.integer "issued",     :limit => 11
-    t.integer "lifetime",   :limit => 11
+    t.integer "issued"
+    t.integer "lifetime"
     t.string  "handle"
     t.string  "assoc_type"
     t.binary  "server_url"
@@ -197,13 +198,13 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
   end
 
   create_table "open_id_authentication_nonces", :force => true do |t|
-    t.integer "timestamp",  :limit => 11,                 :null => false
+    t.integer "timestamp",                  :null => false
     t.string  "server_url"
-    t.string  "salt",                     :default => "", :null => false
+    t.string  "salt",       :default => "", :null => false
   end
 
   create_table "open_ids", :force => true do |t|
-    t.integer  "user_id",    :limit => 11
+    t.integer  "user_id"
     t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -217,8 +218,8 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
   end
 
   create_table "taggings", :force => true do |t|
-    t.integer  "tag_id",        :limit => 11
-    t.integer  "taggable_id",   :limit => 11
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
     t.string   "taggable_type"
     t.datetime "created_at"
   end
@@ -238,10 +239,10 @@ ActiveRecord::Schema.define(:version => 20080623064921) do
     t.string   "name",                      :limit => 40
     t.string   "crypted_password",          :limit => 40
     t.string   "salt",                      :limit => 40
-    t.integer  "group_id",                  :limit => 11
-    t.integer  "local",                     :limit => 11
-    t.integer  "avatar_id",                 :limit => 11
-    t.integer  "blog_id",                   :limit => 11
+    t.integer  "group_id"
+    t.integer  "local"
+    t.integer  "avatar_id"
+    t.integer  "blog_id"
     t.datetime "remember_token_expires_at"
     t.datetime "last_login_at"
     t.datetime "created_at"

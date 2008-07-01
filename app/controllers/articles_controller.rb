@@ -1,6 +1,7 @@
 class ArticlesController < ApplicationController
   
-  before_filter :load_blog, :login_required, :only => [ :new, :create, :edit, :update, :destroy , :auto_complete_for_tag_name]
+  before_filter :load_blog
+  before_filter :login_required, :only => [ :new, :create, :edit, :update, :destroy , :auto_complete_for_tag_name]
   
   in_place_edit_for :article, :title
   in_place_edit_for :article, :digest
@@ -8,17 +9,37 @@ class ArticlesController < ApplicationController
   auto_complete_for :tag, :name
 
   protect_from_forgery :except => :auto_complete_for_tag_name
-
+  
+  def tag
+    @articles= Article.find_tagged_with(params[:id]).paginate(:per_page   => 10, 
+                                          :page       => params[:page], 
+                                          :order      => "created_at DESC")
+    @tags = Article.tag_counts                                      
+    respond_to do |format|
+      format.html { render :file => 'articles/index', :layout => true, :use_full_path  => true }
+      format.xml  { render :xml => @articles }
+    end
+  end
+  
   # GET /articles
   # GET /articles.xml
   def index
     if @blog
       # @articles = @blog.articles.find_new(15)
       # @articles = @blog.articles.recent
-      @articles = @blog.articles.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
+      @articles = @blog.articles.paginate(:per_page   => 10, 
+                                          :page       => params[:page], 
+                                          :conditions => {:is_reply => false},
+                                          :order      => "created_at DESC")
+      # acts_as_taggable_on_steroids 提供的 tag cloud                                    
+      @tags = @blog.articles.tag_counts                                        
     else
       # @articles=Article.find_new(15)
-      @articles=Article.paginate(:per_page => 10, :page => params[:page], :order => "created_at DESC")
+      @articles=Article.paginate(:per_page   => 10, 
+                                 :page       => params[:page], 
+                                 :conditions => {:is_reply => false},
+                                 :order      => "created_at DESC")
+      @tags = Article.tag_counts                                    
     end
     respond_to do |format|
       format.html # index.html.erb
