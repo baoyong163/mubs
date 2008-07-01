@@ -5,7 +5,9 @@ class Article < ActiveRecord::Base
 
   acts_as_taggable
   
-  has_and_belongs_to_many :blog
+  has_and_belongs_to_many :blogs
+  has_many :participations
+  has_many :users, :through => :participations
   has_many :replies,
            :class_name  => "Article",
            :foreign_key => "parent_id"

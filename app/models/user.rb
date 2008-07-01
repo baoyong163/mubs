@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email,    :case_sensitive => false
   validates_format_of       :email,    :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD
   
+  has_many :participations
+  has_many :articles, :through => :participations
   has_many :open_ids , :attributes => true, :discard_if => proc { |open_id| open_id.url.blank? } # use attribute_fu plugin
   has_many :memberships
   has_many :blogs, :through => :memberships

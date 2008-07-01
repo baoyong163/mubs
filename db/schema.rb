@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080630195814) do
+ActiveRecord::Schema.define(:version => 20080701152926) do
 
   create_table "articles", :force => true do |t|
     t.integer  "thread_id"
@@ -209,6 +209,19 @@ ActiveRecord::Schema.define(:version => 20080630195814) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "participations", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "article_id"
+    t.string   "role"
+    t.string   "permission"
+    t.string   "note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "participations", ["article_id", "user_id"], :name => "index_participations_on_article_id_and_user_id"
+  add_index "participations", ["user_id"], :name => "index_participations_on_user_id"
 
   create_table "sites", :force => true do |t|
     t.string   "name"
