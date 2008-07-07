@@ -3,8 +3,10 @@ class UsersController < ApplicationController
   # Protect these actions behind an admin login
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge]
   before_filter :find_user, :only => [:suspend, :unsuspend, :destroy, :purge]
+  # before_filter :reset_flag
   
   auto_complete_for :user, :login
+  auto_complete_for :user, :subdomain
 
   protect_from_forgery :except => :auto_complete_for_user_login
 
@@ -14,7 +16,9 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user=User.find(params[:id])
+    @user=User.find(params[:id]) unless @user
+    @articles = @user.articles.paginate(:per_page => 10, :page => params[:page], :conditions => {:is_reply => false},:order => "created_at DESC")
+    @tags = @user.articles.tag_counts
   end
 
   # render new.rhtml
@@ -53,6 +57,7 @@ Use attribute_fu plugin to create sub-model
     logout_keeping_session!
     @user = User.new(params[:user])
     @user.open_id_attributes = params[:open_id_attributes] # use attribute_fu plugin to create sub-model
+    @user.subdomain = Idna.toASCII(params[:user][:login])
     @user.register! if @user && @user.valid?
     success = @user && @user.valid?
     if success && @user.errors.empty?
@@ -100,6 +105,7 @@ Use attribute_fu plugin to update sub-model
   def update
     @user = User.find(params[:id])
     @user.open_id_attributes = params[:open_id_attributes] # use attribute_fu plugin to update sub-model
+    @user.subdomain = Idna.toASCII(params[:user][:login])
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'
@@ -157,4 +163,9 @@ protected
   def find_user
     @user = User.find(params[:id])
   end
+  
+  def reset_flag
+    session[:flag] = nil
+  end
+  
 end

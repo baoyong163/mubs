@@ -10,7 +10,7 @@ class OpenId < ActiveRecord::Base
     begin
       if self.url
         # 将unicode字符编码URI为符合IDN标准的ascii punycode URI
-        idn = Idna.toASCII(self.url.gsub(/[a-zA-Z]+:\/\//,''))
+        idn = "http://" + Idna.toASCII(self.url.gsub(/[a-zA-Z]+:\/\//,''))
         # 将OpenID标准化
         self.url= OpenIdAuthentication.normalize_url(idn)
       end

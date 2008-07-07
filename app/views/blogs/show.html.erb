@@ -1,8 +1,10 @@
+<h2><%= @blog.name %></h2>
+
 <div class="span-15 prepend-1 colborder">
 	<div class="pagination" align="right">
 		<%= will_paginate @articles %>
 	</div>
-	
+
 	<% @articles.each do |article| %>
 	<p><%= link_to article.title, [@blog, article] %></p> <%# article_path(article) %>
 	<% end %>

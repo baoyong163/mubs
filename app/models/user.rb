@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   validates_presence_of     :email
   validates_length_of       :email,    :within => 6..100 #r@a.wk
   validates_uniqueness_of   :email,    :case_sensitive => false
+  validates_uniqueness_of   :subdomain,:case_sensitive => false
   validates_format_of       :email,    :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD
   
   has_many :participations
@@ -51,4 +52,11 @@ class User < ActiveRecord::Base
         self.activation_code = self.class.make_token
     end
     
+    def validate
+      if sub = self.subdomain
+        if Blog.find_by_subdomain(sub)
+          errors.add :subdomain, 'has been tanken! Choose another one.'
+        end
+      end
+    end
 end

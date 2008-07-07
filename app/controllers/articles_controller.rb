@@ -50,10 +50,11 @@ class ArticlesController < ApplicationController
   # GET /articles/1
   # GET /articles/1.xml
   def show
-    @article = Article.find(params[:id])
-    @blog = params[:blog_id]
+    @article  = Article.find(params[:id])
+    @blog     = params[:blog_id]
     @comments = @article.comments.paginate(:per_page => 10, :page => params[:page])
-    @replies = @article.replies.paginate(:per_page => 10, :page => params[:page])
+    @replies  = @article.replies.paginate(:per_page => 10, :page => params[:page])
+    @users    = @article.users
     @article.view!
     # @comments = Comment.find(:all, :conditions => ['article_id = ?', @article.id] ).concat( Article.find(:all, :conditions => ['parent_id = ?', @article.id]))
     @comments = @replies + Comment.find(:all)#paginate(:per_page => 10, :page => params[:page])
@@ -86,7 +87,8 @@ class ArticlesController < ApplicationController
   # POST /articles.xml
   def create
     @article = Article.new(params[:article])
-    @article.blog << @blog
+    @article.blogs << @blog
+    @article.users << current_user
     if params[:tag][:name] # 保存关键词
       @article.tag_list=params[:tag][:name]
     end
@@ -106,7 +108,8 @@ class ArticlesController < ApplicationController
   # PUT /articles/1.xml
   def update
     @article = Article.find(params[:id])
-    @article.blog + [@blog] if @blog # @blog不为数组时，以后考虑多个blog的情况
+    @article.blogs + [@blog] if @blog # @blog不为数组时，以后考虑多个blog的情况
+    @article.users << current_user
     if params[:tag][:name] # 保存关键词
       @article.tag_list=params[:tag][:name]
     end

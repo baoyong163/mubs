@@ -27,6 +27,12 @@
 			<h3><%= :name.t %>: <%= user.name %></h3>
 			<% end %>
 			
+			<% if user.subdomain %>
+			<h3><%= :Subdomain.t %>:</h3>
+			<%- url = 'http://'+user.subdomain+'.'+request.domain+request.port_string -%>
+			<a href="<%= url %>"><%= idn_url(url) %></a>
+			<% end %>
+			
 			<% unless user.open_ids.empty? %>
 			<div id="users_openids">
 				<%= user.login %>'s OpenIDs:

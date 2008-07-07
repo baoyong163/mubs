@@ -2,8 +2,8 @@
 	<h2><%= link_to @article.title, blog_article_path(@blog, @article) %></h2> 
 	<p> 
 	<%= link_to :Back.t, blog_path(@blog) %> |
-	<%= @article.created_at  %> | 
-	<%= link_to @article.users.first.login, user_path(@article.users.first)  %> | 
+	<%= @article.created_at %> | 
+	<%= link_to @users.first.login, user_path(@users.first) %> | 
 	<%= link_to :Edit.t, edit_blog_article_path(@blog, @article) %> | 
 	<%= link_to :Destroy.t, blog_article_path(@blog, @article), :confirm => :'Are you sure?'.t, :method => :delete %></p> <%# [@blog, @article_comment] %>
 	<% else %>
@@ -11,7 +11,7 @@
 	<p> 
 	<%= link_to :Back.t, articles_path %> |
 	<%= @article.created_at  %> | 
-	<%= @article.users.first.login  %> | 
+	<%= link_to @users.first.login, user_path(@users.first) %> | 
 	<%= link_to :Edit.t, edit_article_path(@article) %> | 
 	<%= link_to :Destroy.t, @article, :confirm => :'Are you sure?'.t, :method => :delete %>
 	</p>

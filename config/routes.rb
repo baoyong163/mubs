@@ -33,7 +33,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :memberships
   
-  map.resources :open_ids
+  # map.resources :open_ids
 
   map.root :controller => "blogs", :action => "home"
 
@@ -49,8 +49,8 @@ ActionController::Routing::Routes.draw do |map|
   end
   
 	map.resources :commenters, :member => { :suspend   => :put,
-                                     :unsuspend => :put,
-                                     :purge     => :delete }
+                                          :unsuspend => :put,
+                                          :purge     => :delete }
 
   map.resources :comments
   map.resources :articles, :has_many => [:replies, :comments, :tags]
@@ -68,6 +68,10 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :users, :member => { :suspend => :put, :unsuspend => :put, :purge => :delete },
                 :has_many => [:blogs, :articles, :open_ids, :tags]
+
+  map.connect 'open_ids/xrds', :controller => 'open_ids', :action => 'idp_xrds'
+  map.connect 'user/:username', :controller => 'open_ids', :action => 'user_page'
+  map.connect 'user/:username/xrds', :controller => 'open_ids', :action => 'user_xrds'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

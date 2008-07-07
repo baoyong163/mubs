@@ -22,3 +22,5 @@ config.action_view.cache_template_loading            = true
 # config.action_mailer.raise_delivery_errors = false
 
 config.active_record.observers = :commenter_observer 
+
+config.logger = Logger.new("#{RAILS_ROOT}/tmp/log/#{RAILS_ENV}.log", "daily")

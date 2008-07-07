@@ -1,7 +1,7 @@
 class CreateBlogs < ActiveRecord::Migration
   def self.up
     create_table :blogs do |t|
-      t.string :name, :subtitle, :limit => 40
+      t.string :name, :subdomain, :subtitle, :limit => 40
       t.integer :status, :rank, :permission, :adver
       t.text :description
       t.timestamps

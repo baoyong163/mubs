@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080701152926) do
+ActiveRecord::Schema.define(:version => 20080702052142) do
 
   create_table "articles", :force => true do |t|
     t.integer  "thread_id"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20080701152926) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "subdomain",   :limit => 40
   end
 
   create_table "categories", :force => true do |t|
@@ -188,6 +189,15 @@ ActiveRecord::Schema.define(:version => 20080701152926) do
   add_index "memberships", ["blog_id", "user_id"], :name => "index_memberships_on_blog_id_and_user_id"
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
 
+  create_table "open_id_associations", :force => true do |t|
+    t.binary  "server_url",                 :null => false
+    t.string  "handle",     :default => "", :null => false
+    t.binary  "secret",                     :null => false
+    t.integer "issued",                     :null => false
+    t.integer "lifetime",                   :null => false
+    t.string  "assoc_type", :default => "", :null => false
+  end
+
   create_table "open_id_authentication_associations", :force => true do |t|
     t.integer "issued"
     t.integer "lifetime"
@@ -200,6 +210,12 @@ ActiveRecord::Schema.define(:version => 20080701152926) do
   create_table "open_id_authentication_nonces", :force => true do |t|
     t.integer "timestamp",                  :null => false
     t.string  "server_url"
+    t.string  "salt",       :default => "", :null => false
+  end
+
+  create_table "open_id_nonces", :force => true do |t|
+    t.string  "server_url", :default => "", :null => false
+    t.integer "timestamp",                  :null => false
     t.string  "salt",       :default => "", :null => false
   end
 
@@ -222,6 +238,16 @@ ActiveRecord::Schema.define(:version => 20080701152926) do
 
   add_index "participations", ["article_id", "user_id"], :name => "index_participations_on_article_id_and_user_id"
   add_index "participations", ["user_id"], :name => "index_participations_on_user_id"
+
+  create_table "sessions", :force => true do |t|
+    t.string   "session_id", :default => "", :null => false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "sites", :force => true do |t|
     t.string   "name"
@@ -265,6 +291,7 @@ ActiveRecord::Schema.define(:version => 20080701152926) do
     t.string   "activation_code",           :limit => 40
     t.string   "state",                                   :default => "passive"
     t.string   "time_zone",                 :limit => 40, :default => "UTC"
+    t.string   "subdomain",                 :limit => 40
   end
 
 end

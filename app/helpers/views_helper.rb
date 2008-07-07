@@ -11,5 +11,11 @@ module ViewsHelper
   def idn_url(ascii_url)
     'http://' + Idna.toUnicode(ascii_url.gsub(/[a-zA-Z]+:\/\//,''))
   end
+  
+  def url_for_user
+    # url_for :controller => 'user', :action => session[:username]
+    
+    'http://'+ @user.subdomain + '.' + request.domain + request.port_string
+  end
 
 end

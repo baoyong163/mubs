@@ -4,6 +4,11 @@
 <%= text_field_with_auto_complete :user, :login %>
 <div class="fieldWithErrors"><%= error_message_on(:user, :login) %></div>
 
+<p><label for="subdomain"><%= :Subdomain.t %></label><br/>
+<%#= form.text_field :subdomain %></p>
+<%= text_field_with_auto_complete :user, :subdomain %>
+<div class="fieldWithErrors"><%= error_message_on(:user, :subdomain) %></div>
+
 <p><label for="name"><%= :Name.t %></label><br/>
 <%= form.text_field :name %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :name) %></div>

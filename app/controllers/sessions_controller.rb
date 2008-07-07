@@ -3,6 +3,8 @@ class SessionsController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
 
+  protect_from_forgery :except => :create
+
   # render new.rhtml
   def new
   end
@@ -12,7 +14,7 @@ class SessionsController < ApplicationController
     if using_open_id?
       if params[:openid_url] # 当有openid的输入时，格式化unicode的openid为ascii的标准url
         # 将unicode字符编码URI为符合IDN标准的ascii punycode URI
-        idn = Idna.toASCII(params[:openid_url].gsub(/[a-zA-Z]+:\/\//,'')) 
+        idn = "http://" + Idna.toASCII(params[:openid_url].gsub(/[a-zA-Z]+:\/\//,'')) 
         ret = OpenIdAuthentication.normalize_url(idn) # 将OpenID标准化
         open_id_authentication(ret)
       else # openid提供者返回的标准ascii url不需要再格式化

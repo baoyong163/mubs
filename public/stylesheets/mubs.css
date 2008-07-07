@@ -8,7 +8,15 @@
 	text-align:right;
 }
 
-input[name="openid_url"] {
+input[name="login"] {
+  background: url('/images/login.png') no-repeat;
+	background-position: 0 50%;
+	padding-left:15px;
+}input[name="password"] {
+  background: url('/images/pw.png') no-repeat;
+	background-position: 0 50%;
+	padding-left:15px;
+}input[name="openid_url"] {
   background: url('/images/openid.png') no-repeat;
 	background-position: 0 50%;
 	padding-left:15px;
