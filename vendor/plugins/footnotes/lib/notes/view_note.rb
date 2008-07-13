@@ -25,16 +25,16 @@ module Footnotes
       end
 
       def valid?
-        template_path && prefix?
+        template_path && prefix? && @template.respond_to?(:finder)
       end
 
       protected
         def template_extension(path)
-          @template.send(:pick_template_extension, ActionView::TemplateFile.from_path(path)).to_s
+          @template.finder.pick_template_extension(path)
         end
 
         def template_base_path(path)
-          File.join ApplicationController.view_paths.first.to_s, template_extension(path)
+          @template.finder.pick_template(path, template_extension(path))
         end
 
         def template_path
