@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery :secret => 'c71d035f25b00af2ff020c1172e5441b'
+  
+  # See ActionController::Base for details 
+  # Uncomment this to filter the contents of submitted sensitive data parameters
+  # from your application log (in this case, all fields with names like "password"). 
+  # filter_parameter_logging :password
 
   # lib/authenticated_system
   include AuthenticatedSystem
@@ -15,6 +20,11 @@ class ApplicationController < ActionController::Base
 
   # Globalize插件设置语言
   before_filter :init_page, :set_locale#, :account_required
+  
+  rescue_from(
+  ActiveRecord::RecordNotFound,
+  ActionController::UnknownAction, :with => :render_404)
+  rescue_from ActionController::InvalidAuthenticityToken, :with => :render_422
 
   private
   def init_page
@@ -61,12 +71,24 @@ class ApplicationController < ActionController::Base
     if !request.subdomains.empty?
       unless @user = User.find_by_subdomain(request.subdomains.last)
         @blog = Blog.find_by_subdomain(request.subdomains.last)
-      end       
-      # if @user
-        # redirect_to user_path(@user) if session[:flag] == nil #request.subdomains.last != @user.subdomain
-        # session[:flag] = 1
-      # end
+      end
     end
+  end
+  
+  def render_404
+    render_error(404)
+  end
+
+  def render_422
+    render_error(422)
+  end
+
+  def render_500
+    render_error(500)
+  end
+
+  def render_error(status_code)
+    render :file => "#{RAILS_ROOT}/public/#{status_code}.html", :status => status_code
   end
   
 end

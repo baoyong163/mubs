@@ -133,7 +133,8 @@ protected
   # end
   
   def unkown_request
-    redirect_to "/404.html"
+    # redirect_to "/404.html"
+    render_404
   end
   
 end

@@ -44,6 +44,28 @@ class User < ActiveRecord::Base
     u = find_in_state :first, :active, :conditions => {:login => login} # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
+  
+  
+  def forgot_password!
+    @forgotten_password = true
+    self.make_password_reset_code
+    self.save
+  end
+  
+  # First update the password_reset_code before setting the
+  # reset_password flag to avoid duplicate email notifications.
+  def reset_password
+    self.update_attribute(:password_reset_code, nil)
+    @reset_password = true
+  end  
+  
+  def recently_forgot_password?
+    @forgotten_password
+  end
+
+  def recently_reset_password?
+    @reset_password
+  end
 
   protected
     
@@ -51,7 +73,11 @@ class User < ActiveRecord::Base
         self.deleted_at = nil
         self.activation_code = self.class.make_token
     end
-    
+
+    def make_password_reset_code
+      self.password_reset_code = self.class.make_token
+    end
+  
     def validate
       if sub = self.subdomain
         if Blog.find_by_subdomain(sub)

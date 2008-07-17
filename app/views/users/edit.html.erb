@@ -1,15 +1,63 @@
-<h1>Editing user</h1>
+<div>
+	<h1 style="display:inline;">Editing user</h1>	
+	<%= link_to :Show.t, @user %> | <%= link_to :Back.t, users_path %>
+	<br/>
+	<br/>
+</div>
 
 <%= error_messages_for :user %>
 
-<% form_for(@user) do |f| %>
-	<%= render :partial => 'form' , :object => f %>
+<% form_for(@user) do |form| %>
+<div id="user_form" class="span-9">
+<p><label for="user_login"><%= :Login.t %></label><br/>
+<%#= form.text_field :login %>
+<%= text_field_with_auto_complete :user, :login %></p>
+<div class="fieldWithErrors"><%= error_message_on(:user, :login) %></div>
 
-	<div class="span-4 last" >
-		<%= f.submit :Update.t %> <br />
-		<%= link_to :Show.t, @user %> |
-		<%= link_to :Back.t, users_path %>
-	</div>
+<p><label for="user_subdomain"><%= :Subdomain.t %></label><br/>
+<%#= form.text_field :subdomain %>
+<%= text_field_with_auto_complete :user, :subdomain %></p>
+<div class="fieldWithErrors"><%= error_message_on(:user, :subdomain) %></div>
+
+<p><label for="user_name"><%= :Name.t %></label><br/>
+<%= form.text_field :name %></p>
+<div class="fieldWithErrors"><%= error_message_on(:user, :name) %></div>
+
+<p><label for="user_email"><%= :Email.t %></label><br/>
+<%= form.text_field :email %></p>
+<div class="fieldWithErrors"><%= error_message_on(:user, :email) %></div>
+
+<p><label　for="user_time_zone"><%= :'Your Time Zone'.t %></label><br/>
+<%= time_zone_select( :user, :time_zone, nil, :default => "UTC" ) %></p>
+
+	<%= form.submit :"Update information".t %> <br />
+</div>
+
+<%= form.add_associated_link(:'Add OpenIDs'.t, @user.open_ids.build) %>
+<div id="open_ids" class="span-9">
+  <%= form.render_associated_form(@user.open_ids, :new => 3) %>
+  <%#= form.render_associated_form(@user.open_ids) %>
+</div>
+
+
 <% end %>
+
+<div class="span-4 last" >
+<% form_tag change_password_user_path, :method => :put do %>
+
+<p><label for="old_password"><%= :"Old password".t %></label><br/>
+<%= password_field_tag :old_password %></p>
+
+<p><label for="password"><%= :"New password".t %><span class="note">(minimum length is 6 characters)</span></label><br/>
+<%= password_field_tag :password %></p>
+
+<p><label for="password_confirmation"><%= :"Password confirmation".t %></label><br/>
+<%= password_field_tag :password_confirmation %></p>
+
+<div>
+	<%= submit_tag :'update password'.t %>
+</div>
+<% end %>
+</div>
 
 <hr />

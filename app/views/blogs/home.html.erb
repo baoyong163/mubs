@@ -10,8 +10,11 @@
 </div>
 
 <div class="span-7 last">
-<%= link_to :signup.t, '/signup' unless logged_in? %>
-<%= render :file => 'sessions/new', :use_full_path => true %>
+	<% unless logged_in?  %>
+	<%= "If you are not a member".t %>
+	<h2><%= link_to :signup.t, '/signup' %></h2>
+	<% end %>
+	<%= render :file => 'sessions/new', :use_full_path => true %>
 </div>
 
 <hr />

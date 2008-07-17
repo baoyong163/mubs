@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   # Protect these actions behind an admin login
   before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge]
   before_filter :find_user, :only => [:suspend, :unsuspend, :destroy, :purge]
-  # before_filter :reset_flag
+  before_filter :login_required, :only => [:index, :edit, :update, :change_password]
   
   auto_complete_for :user, :login
   auto_complete_for :user, :subdomain
@@ -21,7 +21,6 @@ class UsersController < ApplicationController
     @tags = @user.articles.tag_counts
   end
 
-  # render new.rhtml
   def new
     @user = User.new
   end
@@ -73,7 +72,6 @@ Use attribute_fu plugin to create sub-model
     @user=User.find(params[:id])
     @open_ids = @user.open_ids
   end
-  
   
 =begin
 Use attribute_fu plugin to update sub-model
@@ -155,17 +153,32 @@ Use attribute_fu plugin to update sub-model
     redirect_to users_path
   end
   
-  # There's no page here to update or destroy a user.  If you add those, be
-  # smart -- make sure you check that the visitor is authorized to do so, that they
-  # supply their old password along with a new one to update it, etc.
+  def change_password
+    if User.authenticate(current_user.login, params[:old_password])
+      if ((params[:password] == params[:password_confirmation]) && !params[:password_confirmation].blank?)
+        current_user.password_confirmation = params[:password_confirmation]
+        current_user.password = params[:password]        
+        if current_user.save
+          flash[:notice] = 'Your password has been changed.'
+          redirect_to edit_user_path(:user => current_user)
+        else
+          flash[:error] = 'Sorry, your password could not be changed.'
+          redirect_to edit_user_path
+        end
+      else
+        flash[:error] = 'The confirmation of the new password was incorrect.'
+        @old_password = params[:old_password]
+        redirect_to edit_user_path
+      end
+    else
+      flash[:error] = 'Your old password is incorrect.'
+      redirect_to edit_user_path
+    end 
+  end
 
 protected
   def find_user
     @user = User.find(params[:id])
   end
-  
-  def reset_flag
-    session[:flag] = nil
-  end
-  
+
 end

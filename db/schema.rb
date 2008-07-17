@@ -289,6 +289,7 @@ ActiveRecord::Schema.define(:version => 20080702052142) do
     t.datetime "activated_at"
     t.datetime "deleted_at"
     t.string   "activation_code",           :limit => 40
+    t.string   "password_reset_code",       :limit => 40
     t.string   "state",                                   :default => "passive"
     t.string   "time_zone",                 :limit => 40, :default => "UTC"
     t.string   "subdomain",                 :limit => 40

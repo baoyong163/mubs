@@ -3,7 +3,7 @@ class CreateUsers < ActiveRecord::Migration
     create_table :users, :force => true do |t|
       t.string :name, :limit => 40, :default => '', :null => true
       t.string :login, :subdomain, :email, :crypted_password, :salt,
-               :remember_token, :activation_code, :limit => 40
+               :remember_token, :activation_code, :password_reset_code, :limit => 40
       t.string :state, :null => :no, :default => 'passive'
       t.string :friends_ids
       t.string :time_zone, :limit => 40, :default => 'UTC'

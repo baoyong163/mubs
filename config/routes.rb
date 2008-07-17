@@ -17,6 +17,12 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
+  
+  # Sample resource route with more complex sub-resources
+  #   map.resources :products do |products|
+  #     products.resources :comments
+  #     products.resources :sales, :collection => { :recent => :get }
+  #   end
 
   # Sample resource route within a namespace:
   #   map.namespace :admin do |admin|
@@ -54,29 +60,41 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :comments
   map.resources :articles, :has_many => [:replies, :comments, :tags]
-  map.resources :blogs, :collection => { :home => :get }, :has_many => [:articles, :users]
-  
+  map.resources :blogs, :collection  => { :home => :get }, :has_many => [:articles, :users]
+
   map.open_id_complete 'session', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   
   map.resource :session
   
   # restful-authentication 所需路由
-  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.signup '/signup', :controller => 'users',    :action => 'new'
   map.login  '/login',  :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
   
-  map.resources :users, :member => { :suspend => :put, :unsuspend => :put, :purge => :delete },
+  map.resources :users, :member => { :suspend         => :put, 
+                                     :unsuspend       => :put, 
+                                     :purge           => :delete, 
+                                     :change_password => :put },
                 :has_many => [:blogs, :articles, :open_ids, :tags]
 
-  map.connect 'open_ids/xrds', :controller => 'open_ids', :action => 'idp_xrds'
-  map.connect 'user/:username', :controller => 'open_ids', :action => 'user_page'
+  map.resource :password
+  
+  map.with_options :controller => 'passwords' do |pwd|
+    pwd.forgot_password 'forgot_password', :action    => 'new'
+    pwd.reset_password  'reset_password/:id', :action => 'edit'
+  end
+  
+  map.connect 'open_ids/xrds', :controller       => 'open_ids', :action => 'idp_xrds'
+  map.connect 'user/:username', :controller      => 'open_ids', :action => 'user_page'
   map.connect 'user/:username/xrds', :controller => 'open_ids', :action => 'user_xrds'
 
   # Install the default routes as the lowest priority.
+  # Note: These default routes make all actions in every controller accessible via GET requests. You should
+  # consider removing the them or commenting them out if you're using named routes and resources
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
   
   # 未知路径让blogs/unkown_request处理,返回404或者其它
-  # map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env.production?
+  map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env.production?
 end
