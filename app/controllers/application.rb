@@ -13,17 +13,17 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
 
-  # lib/authenticated_system
+  # lib/authenticated_system.rb
   include AuthenticatedSystem
   
-  # layout 'main'
-
+  # lib/openid_server_system.rb
+  include OpenidServerSystem
+  
   # Globalize插件设置语言
   before_filter :init_page, :set_locale#, :account_required
   
-  rescue_from(
-  ActiveRecord::RecordNotFound,
-  ActionController::UnknownAction, :with => :render_404)
+  rescue_from ActiveRecord::RecordNotFound, ActionController::UnknownAction, 
+              :with => :render_404
   rescue_from ActionController::InvalidAuthenticityToken, :with => :render_422
 
   private

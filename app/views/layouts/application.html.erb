@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<%= yield :openid_head %>
+	<title><%= yield(:title) ||'mubs' %></title>
+	<%= stylesheet_link_tag 'mubs', :bps,:media => "screen", :cache => true %>
+	<%= stylesheet_link_tag 'print', :media => "print", :cache => true %>
+	<!--[if IE]><link rel="stylesheet" href="/stylesheets/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+	<%= javascript_include_tag :all, :cache => true %>
+	<%= yield :js %>	
+</head>
+
+<body>
+	<!-- <div class="container showgrid"> -->
+	<div class="container">
+		<div>
+			<%= render :partial => '/shared/head' %>
+
+			<div id="main"><%= yield %></div>
+			
+			<%= render :partial => '/shared/foot' %>
+		</div>
+	</div>
+</body>
+</html>
