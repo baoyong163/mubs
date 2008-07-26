@@ -39,7 +39,18 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :memberships
   
-  # map.resources :open_ids
+  map.resources :open_ids
+  
+  map.with_options :controller => 'open_ids' do |open_ids|
+    open_ids.formatted_server 'open_ids.:format', :action => 'index'
+    open_ids.server 'open_ids', :action => 'index'
+    open_ids.decide 'open_ids/decide', :action => 'decide'
+    open_ids.proceed 'open_ids/proceed', :action => 'proceed'
+    open_ids.complete 'open_ids/complete', :action => 'complete'
+    open_ids.cancel 'open_ids/cancel', :action => 'cancel'
+    open_ids.formatted_seatbelt_config 'open_ids/seatbelt/config.:format', :action => 'seatbelt_config'
+    open_ids.formatted_seatbelt_state 'open_ids/seatbelt/state.:format', :action => 'seatbelt_login_state'
+  end
 
   map.root :controller => "blogs", :action => "home"
 
@@ -72,12 +83,17 @@ ActionController::Routing::Routes.draw do |map|
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
   
+  map.with_options :controller => 'users' do |user|
+    user.formatted_identity ':user.:format', :action => 'show'
+    user.identity ':user', :action => 'show'
+  end
+
   map.resources :users, :member => { :suspend         => :put, 
                                      :unsuspend       => :put, 
                                      :purge           => :delete, 
                                      :change_password => :put },
                 :has_many => [:blogs, :articles, :open_ids, :tags]
-
+  
   map.resource :password
   
   map.with_options :controller => 'passwords' do |pwd|
@@ -96,5 +112,5 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:action/:id.:format'
   
   # 未知路径让blogs/unkown_request处理,返回404或者其它
-  map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env.production?
+  # map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env.production?
 end

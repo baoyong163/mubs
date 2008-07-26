@@ -6,3 +6,5 @@ doc/app
 doc/plugins
 .svn
 vendor/rails
+config/database.yml
+config/lighttpd.conf

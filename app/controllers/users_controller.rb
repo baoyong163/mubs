@@ -19,6 +19,12 @@ class UsersController < ApplicationController
     @user=User.find(params[:id]) unless @user
     @articles = @user.articles.paginate(:per_page => 10, :page => params[:page], :conditions => {:is_reply => false},:order => "created_at DESC")
     @tags = @user.articles.tag_counts
+    respond_to do |format|
+      format.html do
+        response.headers['X-XRDS-Location'] = formatted_identity_url(:user => @user, :format => :xrds, :protocol => scheme)
+      end
+      format.xrds
+    end
   end
 
   def new
