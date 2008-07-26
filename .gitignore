@@ -8,3 +8,6 @@ doc/plugins
 vendor/rails
 config/database.yml
 config/lighttpd.conf
+public/dispatch.fcgi
+public/dispatch.cgi
+public/dispatch.rb
