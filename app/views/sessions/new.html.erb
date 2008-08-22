@@ -1,6 +1,9 @@
 <%- unless logged_in? -%>
   <% form_tag session_path do -%>
-  <p><label for="login"><%= :Login.t %></label><br/>
+	<b><%= :"Login with ID and password".t %></b>
+	<br />
+	<br />	
+  <p><label for="login"><%= :Login.t %></label><br />
   <%= text_field_tag 'login', @login %></p>
   
   <p><label for="password"><%= :Password.t %></label><br/>
@@ -9,15 +12,17 @@
   <p><label for="remember_me"><%= :"Remember me".t %>:</label>
   <%= check_box_tag 'remember_me', '1', @remember_me %></p>
   
-	<b><%= :OR.t %>:</b>
-
-  <p><label for="openid_url">OpenID:</label><br/>
+	<b><%= :"Or login with OpenID".t %></b>
+	<br />
+	<br />
+  <p><label for="openid_url">OpenID:</label><br />
   <%= text_field_tag "openid_url" %></p>
   
   <p><%#= submit_tag :'Log in'.t, :disable_with => :"Signing in&hellip;".t %></p>
-  <p><%= submit_tag :'Log in'.t %></p>
+  <p><%= submit_tag :'Log in'.t %> <%= link_to :"Forget password".t, '/forgot_password' %></p>
+
   <% end -%>
 <%- else -%>
-	<%= :"Hello".t + ":" + current_user.login %>
+	<%= :"Hello".t + ":" + link_to_current_user  %>
 	<%= link_to :logout.t, '/logout' %>
 <%- end -%>

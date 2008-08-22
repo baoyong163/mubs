@@ -1,27 +1,27 @@
 <div id="user_form" class="span-9">
-<p><label for="login"><%= :Login.t %></label><br/>
-<%#= form.text_field :login %></p>
-<%= text_field_with_auto_complete :user, :login %>
+<p><label for="user_login"><%= :Login.t %></label><br/>
+<%#= form.text_field :login %>
+<%= text_field_with_auto_complete :user, :login %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :login) %></div>
 
-<p><label for="subdomain"><%= :Subdomain.t %></label><br/>
-<%#= form.text_field :subdomain %></p>
-<%= text_field_with_auto_complete :user, :subdomain %>
+<p><label for="user_subdomain"><%= :Subdomain.t %></label><br/>
+<%#= form.text_field :subdomain %>
+<%= text_field_with_auto_complete :user, :subdomain %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :subdomain) %></div>
 
-<p><label for="name"><%= :Name.t %></label><br/>
+<p><label for="user_name"><%= :Name.t %></label><br/>
 <%= form.text_field :name %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :name) %></div>
 
-<p><label for="email"><%= :Email.t %></label><br/>
+<p><label for="user_email"><%= :Email.t %></label><br/>
 <%= form.text_field :email %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :email) %></div>
 
-<p><label for="password"><%= :Password.t %></label><br/>
+<p><label for="user_password"><%= :Password.t %></label><br/>
 <%= form.password_field :password %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :password) %></div>
 
-<p><label for="password_confirmation"><%= :'Confirm Password'.t %></label><br/>
+<p><label for="user_password_confirmation"><%= :'Confirm Password'.t %></label><br/>
 <%= form.password_field :password_confirmation %></p>
 <div class="fieldWithErrors"><%= error_message_on(:user, :password_confirmation) %></div>
 

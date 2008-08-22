@@ -1,3 +1,15 @@
+# == Schema Information
+# Schema version: 20080702052142
+#
+# Table name: open_ids
+#
+#  id         :integer(4)      not null, primary key
+#  user_id    :integer(4)
+#  url        :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class OpenId < ActiveRecord::Base
   validates_presence_of     :url
   validates_uniqueness_of   :url, :case_sensitive => false

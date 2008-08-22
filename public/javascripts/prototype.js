@@ -1,5 +1,5 @@
 /*  Prototype JavaScript framework, version 1.6.0.2
- *  (c) 2005-2007 Sam Stephenson
+ *  (c) 2005-2008 Sam Stephenson
  *
  *  Prototype is freely distributable under the terms of an MIT-style license.
  *  For details, see the Prototype web site: http://www.prototypejs.org/
@@ -530,7 +530,7 @@ if (Prototype.Browser.WebKit || Prototype.Browser.IE) Object.extend(String.proto
     return this.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   },
   unescapeHTML: function() {
-    return this.stripTags().replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+    return this.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
   }
 });
 
@@ -547,7 +547,7 @@ Object.extend(String.prototype.escapeHTML, {
   text: document.createTextNode('')
 });
 
-String.prototype.escapeHTML.div.appendChild(String.prototype.escapeHTML.text);
+with (String.prototype.escapeHTML) div.appendChild(text);
 
 var Template = Class.create({
   initialize: function(template, pattern) {
@@ -589,9 +589,10 @@ var $break = { };
 var Enumerable = {
   each: function(iterator, context) {
     var index = 0;
+    iterator = iterator.bind(context);
     try {
       this._each(function(value) {
-        iterator.call(context, value, index++);
+        iterator(value, index++);
       });
     } catch (e) {
       if (e != $break) throw e;
@@ -600,46 +601,47 @@ var Enumerable = {
   },
 
   eachSlice: function(number, iterator, context) {
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var index = -number, slices = [], array = this.toArray();
-    if (number < 1) return array;
     while ((index += number) < array.length)
       slices.push(array.slice(index, index+number));
     return slices.collect(iterator, context);
   },
 
   all: function(iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var result = true;
     this.each(function(value, index) {
-      result = result && !!iterator.call(context, value, index);
+      result = result && !!iterator(value, index);
       if (!result) throw $break;
     });
     return result;
   },
 
   any: function(iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var result = false;
     this.each(function(value, index) {
-      if (result = !!iterator.call(context, value, index))
+      if (result = !!iterator(value, index))
         throw $break;
     });
     return result;
   },
 
   collect: function(iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var results = [];
     this.each(function(value, index) {
-      results.push(iterator.call(context, value, index));
+      results.push(iterator(value, index));
     });
     return results;
   },
 
   detect: function(iterator, context) {
+    iterator = iterator.bind(context);
     var result;
     this.each(function(value, index) {
-      if (iterator.call(context, value, index)) {
+      if (iterator(value, index)) {
         result = value;
         throw $break;
       }
@@ -648,16 +650,17 @@ var Enumerable = {
   },
 
   findAll: function(iterator, context) {
+    iterator = iterator.bind(context);
     var results = [];
     this.each(function(value, index) {
-      if (iterator.call(context, value, index))
+      if (iterator(value, index))
         results.push(value);
     });
     return results;
   },
 
   grep: function(filter, iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var results = [];
 
     if (Object.isString(filter))
@@ -665,7 +668,7 @@ var Enumerable = {
 
     this.each(function(value, index) {
       if (filter.match(value))
-        results.push(iterator.call(context, value, index));
+        results.push(iterator(value, index));
     });
     return results;
   },
@@ -693,8 +696,9 @@ var Enumerable = {
   },
 
   inject: function(memo, iterator, context) {
+    iterator = iterator.bind(context);
     this.each(function(value, index) {
-      memo = iterator.call(context, memo, value, index);
+      memo = iterator(memo, value, index);
     });
     return memo;
   },
@@ -707,10 +711,10 @@ var Enumerable = {
   },
 
   max: function(iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var result;
     this.each(function(value, index) {
-      value = iterator.call(context, value, index);
+      value = iterator(value, index);
       if (result == null || value >= result)
         result = value;
     });
@@ -718,10 +722,10 @@ var Enumerable = {
   },
 
   min: function(iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var result;
     this.each(function(value, index) {
-      value = iterator.call(context, value, index);
+      value = iterator(value, index);
       if (result == null || value < result)
         result = value;
     });
@@ -729,10 +733,10 @@ var Enumerable = {
   },
 
   partition: function(iterator, context) {
-    iterator = iterator || Prototype.K;
+    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var trues = [], falses = [];
     this.each(function(value, index) {
-      (iterator.call(context, value, index) ?
+      (iterator(value, index) ?
         trues : falses).push(value);
     });
     return [trues, falses];
@@ -747,20 +751,19 @@ var Enumerable = {
   },
 
   reject: function(iterator, context) {
+    iterator = iterator.bind(context);
     var results = [];
     this.each(function(value, index) {
-      if (!iterator.call(context, value, index))
+      if (!iterator(value, index))
         results.push(value);
     });
     return results;
   },
 
   sortBy: function(iterator, context) {
+    iterator = iterator.bind(context);
     return this.map(function(value, index) {
-      return {
-        value: value,
-        criteria: iterator.call(context, value, index)
-      };
+      return {value: value, criteria: iterator(value, index)};
     }).sort(function(left, right) {
       var a = left.criteria, b = right.criteria;
       return a < b ? -1 : a > b ? 1 : 0;
@@ -1048,14 +1051,14 @@ var Hash = Class.create(Enumerable, (function() {
     },
 
     toQueryString: function() {
-      return this.inject([], function(results, pair) {
+      return this.map(function(pair) {
         var key = encodeURIComponent(pair.key), values = pair.value;
 
         if (values && typeof values == 'object') {
           if (Object.isArray(values))
-            return results.concat(values.map(toQueryPair.curry(key)));
-        } else results.push(toQueryPair(key, values));
-        return results;
+            return values.map(toQueryPair.curry(key)).join('&');
+        }
+        return toQueryPair(key, values);
       }).join('&');
     },
 
@@ -1555,7 +1558,6 @@ if (!Node.ELEMENT_NODE) {
     return Element.writeAttribute(cache[tagName].cloneNode(false), attributes);
   };
   Object.extend(this.Element, element || { });
-  if (element) this.Element.prototype = element.prototype;
 }).call(window);
 
 Element.cache = { };
@@ -1932,7 +1934,7 @@ Element.Methods = {
 
   getDimensions: function(element) {
     element = $(element);
-    var display = element.getStyle('display');
+    var display = $(element).getStyle('display');
     if (display != 'none' && display != null) // Safari bug
       return {width: element.offsetWidth, height: element.offsetHeight};
 
@@ -2016,7 +2018,7 @@ Element.Methods = {
       valueL += element.offsetLeft || 0;
       element = element.offsetParent;
       if (element) {
-        if (element.tagName.toUpperCase() == 'BODY') break;
+        if (element.tagName == 'BODY') break;
         var p = Element.getStyle(element, 'position');
         if (p !== 'static') break;
       }
@@ -2026,7 +2028,7 @@ Element.Methods = {
 
   absolutize: function(element) {
     element = $(element);
-    if (element.getStyle('position') == 'absolute') return element;
+    if (element.getStyle('position') == 'absolute') return;
     // Position.prepare(); // To be done manually by Scripty when it needs it.
 
     var offsets = element.positionedOffset();
@@ -2050,7 +2052,7 @@ Element.Methods = {
 
   relativize: function(element) {
     element = $(element);
-    if (element.getStyle('position') == 'relative') return element;
+    if (element.getStyle('position') == 'relative') return;
     // Position.prepare(); // To be done manually by Scripty when it needs it.
 
     element.style.position = 'relative';
@@ -2101,7 +2103,7 @@ Element.Methods = {
 
     element = forElement;
     do {
-      if (!Prototype.Browser.Opera || element.tagName.toUpperCase() == 'BODY') {
+      if (!Prototype.Browser.Opera || element.tagName == 'BODY') {
         valueT -= element.scrollTop  || 0;
         valueL -= element.scrollLeft || 0;
       }
@@ -2216,9 +2218,6 @@ else if (Prototype.Browser.IE) {
   Element.Methods.getOffsetParent = Element.Methods.getOffsetParent.wrap(
     function(proceed, element) {
       element = $(element);
-      // IE throws an error if element is not in document
-      try { element.offsetParent }
-      catch(e) { return $(document.body) }
       var position = element.getStyle('position');
       if (position !== 'static') return proceed(element);
       element.setStyle({ position: 'relative' });
@@ -2232,8 +2231,6 @@ else if (Prototype.Browser.IE) {
     Element.Methods[method] = Element.Methods[method].wrap(
       function(proceed, element) {
         element = $(element);
-        try { element.offsetParent }
-        catch(e) { return Element._returnOffset(0,0) }
         var position = element.getStyle('position');
         if (position !== 'static') return proceed(element);
         // Trigger hasLayout on the offset parent so that IE6 reports
@@ -2248,14 +2245,6 @@ else if (Prototype.Browser.IE) {
       }
     );
   });
-
-  Element.Methods.cumulativeOffset = Element.Methods.cumulativeOffset.wrap(
-    function(proceed, element) {
-      try { element.offsetParent }
-      catch(e) { return Element._returnOffset(0,0) }
-      return proceed(element);
-    }
-  );
 
   Element.Methods.getStyle = function(element, style) {
     element = $(element);
@@ -2348,7 +2337,7 @@ else if (Prototype.Browser.IE) {
   Element._attributeTranslations.has = {};
 
   $w('colSpan rowSpan vAlign dateTime accessKey tabIndex ' +
-      'encType maxLength readOnly longDesc frameBorder').each(function(attr) {
+      'encType maxLength readOnly longDesc').each(function(attr) {
     Element._attributeTranslations.write.names[attr.toLowerCase()] = attr;
     Element._attributeTranslations.has[attr.toLowerCase()] = attr;
   });
@@ -2401,7 +2390,7 @@ else if (Prototype.Browser.WebKit) {
       (value < 0.00001) ? 0 : value;
 
     if (value == 1)
-      if(element.tagName.toUpperCase() == 'IMG' && element.width) {
+      if(element.tagName == 'IMG' && element.width) {
         element.width++; element.width--;
       } else try {
         var n = document.createTextNode(' ');
@@ -2558,7 +2547,7 @@ Element.extend = (function() {
         element.nodeType != 1 || element == window) return element;
 
     var methods = Object.clone(Methods),
-      tagName = element.tagName.toUpperCase(), property, value;
+      tagName = element.tagName, property, value;
 
     // extend methods for specific tags
     if (ByTag[tagName]) Object.extend(methods, ByTag[tagName]);
@@ -2704,7 +2693,7 @@ document.viewport = {
       window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop);
   }
 };
-/* Portions of the Selector class are derived from Jack Slocum's DomQuery,
+/* Portions of the Selector class are derived from Jack Slocumâ€™s DomQuery,
  * part of YUI-Ext version 0.40, distributed under the terms of an MIT-style
  * license.  Please see http://www.yui-ext.com/ for more information. */
 
@@ -2753,7 +2742,7 @@ var Selector = Class.create({
         p = ps[i];
         if (m = e.match(p)) {
           this.matcher.push(Object.isFunction(c[i]) ? c[i](m) :
-            new Template(c[i]).evaluate(m));
+    	      new Template(c[i]).evaluate(m));
           e = e.replace(m[0], '');
           break;
         }
@@ -2979,7 +2968,7 @@ Object.extend(Selector, {
     className:    /^\.([\w\-\*]+)(\b|$)/,
     pseudo:
 /^:((first|last|nth|nth-last|only)(-child|-of-type)|empty|checked|(en|dis)abled|not)(\((.*?)\))?(\b|$|(?=\s|[:+~>]))/,
-    attrPresence: /^\[((?:[\w]+:)?[\w]+)\]/,
+    attrPresence: /^\[([\w]+)\]/,
     attr:         /\[((?:[\w-]*:)?[\w-]+)\s*(?:([!^$*~|]?=)\s*((['"])([^\4]*?)\4|([^'"][^\]]*?)))?\]/
   },
 
@@ -3092,7 +3081,7 @@ Object.extend(Selector, {
 
     nextElementSibling: function(node) {
       while (node = node.nextSibling)
-        if (node.nodeType == 1) return node;
+	      if (node.nodeType == 1) return node;
       return null;
     },
 
@@ -3796,14 +3785,11 @@ Event.Methods = (function() {
     },
 
     pointer: function(event) {
-      var docElement = document.documentElement, body = document.body;
       return {
         x: event.pageX || (event.clientX +
-          (docElement.scrollLeft || body.scrollLeft) -
-          (docElement.clientLeft || 0)),
+          (document.documentElement.scrollLeft || document.body.scrollLeft)),
         y: event.pageY || (event.clientY +
-          (docElement.scrollTop || body.scrollTop) -
-          (docElement.clientTop || 0))
+          (document.documentElement.scrollTop || document.body.scrollTop))
       };
     },
 

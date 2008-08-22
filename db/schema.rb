@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080702052142) do
+ActiveRecord::Schema.define(:version => 20080822085511) do
 
   create_table "articles", :force => true do |t|
     t.integer  "thread_id"
@@ -239,6 +239,18 @@ ActiveRecord::Schema.define(:version => 20080702052142) do
   add_index "participations", ["article_id", "user_id"], :name => "index_participations_on_article_id_and_user_id"
   add_index "participations", ["user_id"], :name => "index_participations_on_user_id"
 
+  create_table "roles", :force => true do |t|
+    t.string "name"
+  end
+
+  create_table "roles_users", :id => false, :force => true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
+  end
+
+  add_index "roles_users", ["role_id"], :name => "index_roles_users_on_role_id"
+  add_index "roles_users", ["user_id"], :name => "index_roles_users_on_user_id"
+
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :default => "", :null => false
     t.text     "data"
@@ -292,6 +304,7 @@ ActiveRecord::Schema.define(:version => 20080702052142) do
     t.string   "state",                                   :default => "passive"
     t.string   "time_zone",                 :limit => 40, :default => "UTC"
     t.string   "subdomain",                 :limit => 40
+    t.string   "password_reset_code",       :limit => 40
   end
 
 end

@@ -1,6 +1,7 @@
 <% if @user.subdomain %>
 <% content_for :openid_head do
-	xrds_url = url_for(:controller=>'user', :action=>@user.subdomain, :only_path => false)+'/xrds'
+	# xrds_url = url_for(:controller=>'user', :action=>@user.subdomain, :only_path => false)+'/xrds'
+	xrds_url = formatted_identity_url(:user=>@user,:format => :xrds, :protocol => scheme)
 	openid_server = url_for(:controller=>'open_ids', :action=>'index', :only_path => false)
 	%>
 	<meta http-equiv="X-XRDS-Location" content="<%= xrds_url %>" />	

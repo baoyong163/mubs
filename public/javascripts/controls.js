@@ -1,6 +1,4 @@
-// script.aculo.us controls.js v1.8.1, Thu Jan 03 22:07:12 -0500 2008
-
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2008 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 //           (c) 2005-2007 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
 //           (c) 2005-2007 Jon Tirsen (http://www.tirsen.com)
 // Contributors:
@@ -874,7 +872,7 @@ Object.extend(Ajax.InPlaceEditor, {
     autoRows: 3,                                // Use when multi-line w/ rows == 1
     cancelControl: 'link',                      // 'link'|'button'|false
     cancelText: 'cancel',
-    clickToEditText: 'Double click to edit',
+    clickToEditText: 'Click to edit',
     externalControl: null,                      // id|elt
     externalControlOnly: false,
     fieldPostCreation: 'activate',              // 'activate'|'focus'|false
@@ -928,7 +926,7 @@ Object.extend(Ajax.InPlaceEditor, {
     }
   },
   Listeners: {
-    dblclick: 'enterEditMode',
+    click: 'enterEditMode',
     keydown: 'checkForEscapeOrReturn',
     mouseover: 'enterHover',
     mouseout: 'leaveHover'

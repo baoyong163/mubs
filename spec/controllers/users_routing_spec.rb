@@ -7,8 +7,8 @@ describe UsersController do
       route_for(:controller => "users", :action => "index").should == "/users"
     end
   
-    it "should map { :controller => 'users', :action => 'new' } to /users/new" do
-      route_for(:controller => "users", :action => "new").should == "/users/new"
+    it "should map { :controller => 'users', :action => 'new' } to /signup" do
+      route_for(:controller => "users", :action => "new").should == "/signup"
     end
   
     it "should map { :controller => 'users', :action => 'show', :id => 1 } to /users/1" do

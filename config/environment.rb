@@ -69,7 +69,8 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net" 
   # Require a gem that needs to require a file different than the gem's name
   # config.gem "aws-s3", :lib => "aws/s3"
-  config.gem "erubis", :version => '>= 2.5.0'
+  # config.gem "erubis", :version => '>= 2.5.0'
+  config.gem 'ruby-openid', :lib => 'openid', :version => '>=2.0.4'
   # config.gem "ferret", :version => '>= 0.11.6'
   # config.gem "uuidtools", :version => '>= 1.0.3'
   config.gem "idn" # 国际化域名库

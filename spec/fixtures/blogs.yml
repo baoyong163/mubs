@@ -1,3 +1,21 @@
+# == Schema Information
+# Schema version: 20080702052142
+#
+# Table name: blogs
+#
+#  id          :integer(4)      not null, primary key
+#  name        :string(40)
+#  subtitle    :string(40)
+#  status      :integer(4)
+#  rank        :integer(4)
+#  permission  :integer(4)
+#  adver       :integer(4)
+#  description :text
+#  created_at  :datetime
+#  updated_at  :datetime
+#  subdomain   :string(40)
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
