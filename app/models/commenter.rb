@@ -1,3 +1,24 @@
+# == Schema Information
+# Schema version: 20080702052142
+#
+# Table name: commenters
+#
+#  id                        :integer(4)      not null, primary key
+#  login                     :string(255)
+#  email                     :string(255)
+#  remember_token            :string(255)
+#  activation_code           :string(40)
+#  crypted_password          :string(40)
+#  salt                      :string(40)
+#  state                     :string(255)     default("passive"), not null
+#  remember_token_expires_at :datetime
+#  last_login_at             :datetime
+#  created_at                :datetime
+#  updated_at                :datetime
+#  deleted_at                :datetime
+#  activated_at              :datetime
+#
+
 require 'digest/sha1'
 class Commenter < ActiveRecord::Base
   # Virtual attribute for the unencrypted password

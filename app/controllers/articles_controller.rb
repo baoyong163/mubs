@@ -3,6 +3,9 @@ class ArticlesController < ApplicationController
   before_filter :load_blog
   before_filter :login_required, :only => [ :new, :create, :edit, :update, :destroy , :auto_complete_for_tag_name]
   
+  # RESTful_ACL
+  before_filter :has_permission?
+  
   in_place_edit_for :article, :title
   in_place_edit_for :article, :digest
   in_place_edit_for :article, :body

@@ -1,0 +1,59 @@
+welcome to mubs -- mulit-users mulit-blogs blog system
+
+http://github.com/johnson/mubs/wikis
+
+h1. 上手指南
+
+h2. 检出代码
+
+<pre>
+git clone git://github.com/johnson/mubs.git (或者 http://github.com/johnson/mubs.git 如果只能访问80端口)
+cd mubs
+</pre>
+
+h2. 安装需要的gem
+
+<pre>
+rake gems:install
+</pre>
+IDN 这个gem需要先装 GNU 的 IDN lib http://www.gnu.org/software/libidn/
+如果window环境下可以把 User model里的validate注释掉，去掉IDN支持
+
+h2. 设置启动
+
+编辑 config/database.yml 符合你的数据库设置
+<pre>
+rake db:migrate
+rake globalize:setup
+ruby script/server
+</pre>
+
+浏览 http://127.0.0.1:3000
+
+h2. 设置 globalize
+
+目前 rake globalize:setup 后要手动把默认数据标记为内置数据，globalize的bug
+<pre>
+ruby script/console
+
+include Globalize
+ViewTranslation.update_all(["built_in = ?", true])
+</pre>
+
+
+h2. 运行测试
+
+测试
+<pre>
+rake spec
+</pre>
+测试并查看spec规格文档
+<pre>
+rake spec:doc
+</pre>
+
+h2. 编码通过测试
+
+h2. 开发
+
+h2. 给coreteam发出pull请求

@@ -1,3 +1,33 @@
+# == Schema Information
+# Schema version: 20080702052142
+#
+# Table name: users
+#
+#  id                        :integer(4)      not null, primary key
+#  login                     :string(255)
+#  email                     :string(255)
+#  remember_token            :string(255)
+#  friends_ids               :string(255)
+#  name                      :string(40)
+#  crypted_password          :string(40)
+#  salt                      :string(40)
+#  group_id                  :integer(4)
+#  local                     :integer(4)
+#  avatar_id                 :integer(4)
+#  blog_id                   :integer(4)
+#  remember_token_expires_at :datetime
+#  last_login_at             :datetime
+#  created_at                :datetime
+#  updated_at                :datetime
+#  activated_at              :datetime
+#  deleted_at                :datetime
+#  activation_code           :string(40)
+#  state                     :string(255)     default("passive")
+#  time_zone                 :string(40)      default("UTC")
+#  subdomain                 :string(40)
+#  password_reset_code       :string(40)
+#
+
 
 quentin:
   id:                        1
