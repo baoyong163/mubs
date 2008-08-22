@@ -76,20 +76,4 @@ class Article < ActiveRecord::Base
     # self.reply_count = self.replies.size+1
   end
   
-  def is_updatable_by(user)
-    user.eql?(author)
-  end
-
-  def is_deletable_by(user)
-    user.eql?(author)
-  end
-
-  def self.is_readable_by(user, object = nil)
-    true
-  end
-
-  def self.is_creatable_by(user)
-    user.logged_in?
-  end
-  
 end

@@ -15,6 +15,10 @@ class ApplicationController < ActionController::Base
 
   # lib/authenticated_system.rb
   include AuthenticatedSystem
+  
+  # lib/role_requirement_system.rb 
+  # This module gives you the require_role helpers, and others.
+  include RoleRequirementSystem
 
   # lib/openid_server_system.rb
   include OpenidServerSystem
