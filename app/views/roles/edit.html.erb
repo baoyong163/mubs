@@ -1,0 +1,15 @@
+<h1>Editing user</h1>
+
+<%= error_messages_for :user %>
+
+<% form_for(@user) do |f| %>
+	<%= render :partial => 'form' , :object => f %>
+
+	<div class="span-4 last" >
+		<%= f.submit :Update.t %> <br />
+		<%= link_to :Show.t, @user %> |
+		<%= link_to :Back.t, users_path %>
+	</div>
+<% end %>
+
+<hr />

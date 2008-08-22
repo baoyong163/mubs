@@ -1,0 +1,64 @@
+<% if @user.subdomain %>
+<% content_for :openid_head do
+	xrds_url = url_for(:controller=>'user', :action=>@user.subdomain, :only_path => false)+'/xrds'
+	openid_server = url_for(:controller=>'open_ids', :action=>'index', :only_path => false)
+	%>
+	<meta http-equiv="X-XRDS-Location" content="<%= xrds_url %>" />	
+	<link rel="openid.server" href="<%= openid_server %>" />
+	<link rel="openid2.provider" href="<%= openid_server %>" />
+	<% end %>
+<% end %>
+
+<div class="span-6">
+	<% unless @user.blogs.empty? %>
+	<div id="users_blogs">
+		<%= @user.login %>'s Blogs:
+		<% @user.blogs.each do |blog| %>
+		<p><%= link_to blog.name, [@user, blog] %></p> <%# blog_path(blog) %>
+		<% end %>
+	</div>
+	<% end %>
+
+	<% unless @user.open_ids.empty? %>
+	<div id="users_openids">
+		<%= @user.login %>'s OpenIDs:
+		<% @user.open_ids.each do |id| %>
+		<p><%= link_to idn_url(id.url), [@user, id] %></p> <%# open_id_path(id) %>
+		<% end %>
+	</div>
+	<% end %>
+
+	<% if @user.subdomain %>
+	<h3><%= :Subdomain.t %>:</h3>
+	<%- url = 'http://'+ @user.subdomain + '.' + request.domain + request.port_string -%>
+	<a href="<%= url %>"><%= idn_url(url) %></a>
+	<% end %>
+
+	<br />
+
+	<%= :"Time Zone".t %>: <%= @user.time_zone %>
+
+	<br />
+
+	<%= link_to :Edit.t, edit_user_path(@user) %> |
+	<%= link_to :Back.t, users_path %>
+</div>
+
+<div class="span-12">
+	<%= @user.login %>'s Articles: <br />
+	<%= will_paginate @articles %>
+	<% @articles.each do |article| %>
+	  <%= link_to article.title, article %> <br />
+	<% end %>
+	<%= will_paginate @articles %>
+</div>
+
+<div class="span-4 last">
+	<%= @user.login %>'s Tags: <br />
+	<div id="tag_cloud">
+		<% tag_cloud @tags, %w(cloud1 cloud2 cloud3 cloud4) do |tag, css_class| %>
+		<%= link_to tag.name, { :controller => :articles, :action => :tag, :id => tag.name }, :class => css_class %>
+		<% end %>
+	</div>
+</div>
+<hr />
