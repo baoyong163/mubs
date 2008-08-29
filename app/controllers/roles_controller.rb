@@ -9,6 +9,7 @@ class RolesController < ApplicationController
   # GET /roles
   # GET /roles.xml
   def index
+    @users=User.find(:all, :limit => 15)
     @roles=Role.find(:all)
     respond_to do |format|
       format.html # index.html.erb
@@ -20,16 +21,6 @@ class RolesController < ApplicationController
   # GET /roles/1.xml
   def show
     @role  = Role.find(params[:id])
-    @blog     = params[:blog_id]
-    @comments = @role.comments.paginate(:per_page => 10, :page => params[:page])
-    @replies  = @role.replies.paginate(:per_page => 10, :page => params[:page])
-    @users    = @role.users
-    @role.view!
-    # @comments = Comment.find(:all, :conditions => ['role_id = ?', @role.id] ).concat( Role.find(:all, :conditions => ['parent_id = ?', @role.id]))
-    @comments = @replies + Comment.find(:all)#paginate(:per_page => 10, :page => params[:page])
-    @comments.sort! do |x, y|
-      x.created_at <=> y.created_at
-    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @role }
@@ -56,15 +47,10 @@ class RolesController < ApplicationController
   # POST /roles.xml
   def create
     @role = Role.new(params[:role])
-    @role.blogs << @blog
-    @role.users << current_user
-    if params[:tag][:name] # 保存关键词
-      @role.tag_list=params[:tag][:name]
-    end
     respond_to do |format|
       if @role.save
         flash[:notice] = 'Role was successfully created.'
-        format.html { @role.parent_id.nil? ? redirect_to([@blog, @role]) : redirect_to([@blog, Role.find(@role.parent_id)]) }
+        format.html { redirect_to(@role) }
         format.xml  { render :xml => @role, :status => :created, :location => @role }
       else
         format.html { render :action => "new" }
