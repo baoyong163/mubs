@@ -112,5 +112,5 @@ ActionController::Routing::Routes.draw do |map|
   map.denied '/denied', :controller => 'sessions', :action => 'denied'
   
   # 未知路径让blogs/unkown_request处理,返回404或者其它
-  map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env.production?
+  map.connect "*inputs", :controller => "blogs", :action => "unkown_request" if Rails.env == "production"
 end

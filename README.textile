@@ -30,17 +30,6 @@ ruby script/server
 
 浏览 http://127.0.0.1:3000
 
-h2. 设置 globalize
-
-目前 rake globalize:setup 后要手动把默认数据标记为内置数据，globalize的bug
-<pre>
-ruby script/console
-
-include Globalize
-ViewTranslation.update_all(["built_in = ?", true])
-</pre>
-
-
 h2. 运行测试
 
 测试
