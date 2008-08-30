@@ -13,11 +13,17 @@ cd mubs
 
 h2. 安装需要的gem
 
-<pre>
-rake gems:install
-</pre>
 IDN 这个gem需要先装 GNU 的 IDN lib http://www.gnu.org/software/libidn/
+<pre>
+sudo apt-get install idn
+sudo yum install idn
+sudo port install idn
+</pre>
+推荐下载源码安装最新版
 如果window环境下可以把 User model里的validate注释掉，去掉IDN支持
+<pre>
+sudo rake gems:install
+</pre>
 
 h2. 设置启动
 
