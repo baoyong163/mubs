@@ -46,13 +46,11 @@ title :"Listing articles".t
 </div>
 
 <div class="span-7 last control">
-<%
-if @blog
-	concat link_to('New article', new_blog_article_path(@blog))
-else
-	concat link_to("New article", new_article_path)
-end
-%>
+<% if @blog %>
+	<%= link_to('New article', new_blog_article_path(@blog)) %>
+<% else %>
+	<%= link_to("New article", new_article_path) %>
+<% end %>
 
 <br />
 

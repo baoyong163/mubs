@@ -15,7 +15,6 @@ module Globalize # :nodoc:
 
       # if there's no translation, use default or original key
       real_default = default || key
-
       result = fetch_from_cache(key, language, real_default, num, namespace)
 
       if num
@@ -77,7 +76,7 @@ module Globalize # :nodoc:
           if !tr && idx != 0
             tr = ViewTranslation.create!(:tr_key => key,
               :language_id => language.id, :pluralization_index => idx,
-              :text => nil, :namespace => namespace)
+              :text => nil, :namespace => namespace, :built_in => false)
           end
         end
 
@@ -133,7 +132,6 @@ module Globalize # :nodoc:
         zero_form   = num == 0
         plural_idx  = language.plural_index(num)        # language-defined plural form
         zplural_idx = zero_form ? 0 : plural_idx # takes zero-form into account
-
         cached = cache_fetch(key, language, zplural_idx, namespace)
         if cached
           result = cached
